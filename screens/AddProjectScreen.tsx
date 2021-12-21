@@ -39,6 +39,11 @@ export default function AddProjectScreen() {
                 size: imageSize
             }
 
+            let newProjectImage = {
+                source: imageUri,
+                pins: []
+            }
+
             setProjectImages([imageUri, ...projectImages])
         }
     };
@@ -84,6 +89,7 @@ export default function AddProjectScreen() {
                             projectImages.map((image, i) => {
                                 return (
                                     <ProjectImagePreviewContainer key={i}>
+                                        <RemoveIcon name="close" />
                                         <ProjectImage 
                                             source={{uri: image}}
                                             style={{
@@ -144,7 +150,7 @@ const ImageOptionIcon = styled(MaterialIcon)`
     color: #000000;
 `;
 
-const CloseIcon = styled(MaterialIcon)`
+const RemoveIcon = styled(MaterialIcon)`
     font-size: 40px;
     position: absolute;
     top: 5px;
