@@ -1,4 +1,5 @@
 import { getItemFromStore } from "./store";
+import { uuid } from "uuidv4";
 
 const getProjects = async () => {
     const projects = await getItemFromStore("projects");
@@ -16,6 +17,9 @@ const saveProject = async () => {
 
     let projects = prev_projects;
 
+    let newProject = {
+        id: uuid()
+    }
 }
 
 const deleteProject = () => {
