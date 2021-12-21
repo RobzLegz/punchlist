@@ -1,22 +1,32 @@
 import { getItemFromStore } from "./store";
 import { uuid } from "uuidv4";
+import { Dispatch } from "redux";
+import { setProjects } from "../redux/slices/projectSlice";
 
-const getProjects = async () => {
+interface Pin{
+    
+}
+
+interface Project{
+    id: string;
+    name: string;
+    description: string;
+    pictures: string[];
+    pins: Pin[];
+}
+
+const getProjects = async (dispatch: Dispatch) => {
     const projects = await getItemFromStore("projects");
     if(!projects){
-        return [];
+        return dispatch(setProjects([]));
     }
 
     const formatted_projects = JSON.parse(projects);
 
-    return formatted_projects;
+    dispatch(setProjects(formatted_projects));
 }
 
-const saveProject = async () => {
-    const prev_projects = await getProjects();
-
-    let projects = prev_projects;
-
+const saveProject = async (projects: Project[]) => {
     let newProject = {
         id: uuid()
     }
