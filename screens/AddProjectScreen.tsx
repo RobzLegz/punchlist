@@ -99,7 +99,7 @@ export default function AddProjectScreen() {
             <DescriptionInput  
                 placeholder="Enter project description"
                 defaultValue={projectDescription}
-                onChangeText={(projectDescription) => setProjectDescription(projectName)}
+                onChangeText={(projectDescription) => setProjectDescription(projectDescription)}
                 numberOfLines={4}
                 textAlignVertical="top"
             />
