@@ -3,9 +3,7 @@ import styled from "styled-components/native";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import * as ImagePicker from "expo-image-picker";
-import { Dimensions } from "react-native";
-import { PanGestureHandler, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { Dimensions, GestureResponderEvent } from "react-native";
 
 const windowWidth = Math.floor(Dimensions.get("window").width);
 
@@ -17,17 +15,22 @@ interface Pin{
 }
 
 interface ProjectImage{
-    source: string,
-    pins: Pin[]
+    id: number;
+    source: string;
+    pins: Pin[];
 }
 
 export default function AddProjectScreen() {
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
+    const [pinDescription, setPinDescription] = useState("");
+    const [showPinDescription, setShowPinDescription] = useState(false);
     const [projectImages, setProjectImages] = useState<ProjectImage[]>([]);
     const [pining, setPining] = useState(false);
 
-    const translateX = useSharedValue(0);
+    const [pinX, setPinX] = useState(10);
+    const [pinY, setPinY] = useState(10);
+
 
     const selectImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -57,6 +60,7 @@ export default function AddProjectScreen() {
             }
 
             let newProjectImage = {
+                id: projectImages.length + 1,
                 source: imageUri,
                 pins: []
             }
@@ -65,31 +69,43 @@ export default function AddProjectScreen() {
         }
     };
 
-    const removeImage = () => {
-
+    const removeImage = (imageId: number) => {
+        let restProjectImages = projectImages.filter((img) => img.id !== imageId);
+        
+        setProjectImages(restProjectImages);
     }
 
-    const panGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-        onStart: (event) => {
+    const getPinPosition = (event: GestureResponderEvent) => {
+        setPinX(event.nativeEvent.locationX)
+        setPinY(event.nativeEvent.locationY)
+    }
 
-        },
-        onActive: (event) => {
-            translateX.value = event.translationX;
-            console.log(event)
-        },
-        onEnd: (event) => {
-        }
-    })
+    const savePin = (imageId: number) => {
+        
 
-    const movablePinStyle = useAnimatedStyle(() => {
-        return {
-            transform: [
-                {
-                    translateX: translateX.value
-                }
-            ]
+        let pinImage = projectImages.find(img => img.id === imageId);
+        if(!pinImage){
+            return;
         }
-    })
+
+        let newPin: Pin = {
+            id: pinImage.pins.length + 1,
+            x: pinX,
+            y: pinY,
+            description: ""
+        }
+
+        pinImage.pins = [...pinImage.pins, newPin];
+
+        setPining(false);
+        setPinX(10);
+        setPinY(10);
+    }
+    
+    const seePinDescription = (description: string) => {
+        setPinDescription(description);
+        setShowPinDescription(!showPinDescription);
+    }
 
     return (
         <CreateScreenBody>
@@ -126,6 +142,7 @@ export default function AddProjectScreen() {
                         snapToAlignment={"center"}
                         showsHorizontalScrollIndicator={false}
                         showsVerticalScrollIndicator={false}
+                        scrollEnabled={!pining}
                     >
                         {
                             projectImages.map((projectImage, i) => {
@@ -133,8 +150,6 @@ export default function AddProjectScreen() {
                                     <ProjectImagePreviewContainer 
                                         key={i}
                                     >
-                                        <RemoveIcon name="close" />
-
                                         <ProjectImage 
                                             source={{uri: projectImage.source}}
                                             style={{
@@ -143,16 +158,58 @@ export default function AddProjectScreen() {
                                         />
 
                                         {
-                                            pining ? (
-                                                <ProjectPinHolder
-                                                    onGestureEvent={panGestureEvent}
-                                                >
-                                                    <PinHolder style={[movablePinStyle]}>
+                                            showPinDescription ? (
+                                                <PinDescription>
+                                                    <DescriptionInput 
+                                                        numberOfLines={4}
+                                                        placeholder="Punch description"
+                                                        textAlignVertical="top"
+                                                    />
+                                                    <RemoveIcon name="close" onPress={() => seePinDescription("")} />
+                                                </PinDescription>
+                                            ) : (null)
+                                        }
+
+                                        {
+                                            projectImage.pins.map((pin, i) => {
+                                                return (
+                                                    <PinHolder 
+                                                        key={i}
+                                                        style={{
+                                                            top: pin.y,
+                                                            left: pin.x
+                                                        }}
+                                                        onPress={() => seePinDescription(pin.description)}
+                                                    >
                                                         <PinDraggableIcon name="push-pin" />
                                                     </PinHolder>
+                                                )
+                                            })      
+                                        }
+
+                                        {
+                                            pining ? (
+                                                <ProjectPinHolder onPress={getPinPosition}>
+                                                    {
+                                                        pinX && pinY ? (
+                                                            <PinHolder 
+                                                                style={{
+                                                                    top: pinY,
+                                                                    left: pinX
+                                                                }}
+                                                            >
+                                                                <PinDraggableIcon name="push-pin" />
+                                                            </PinHolder>
+                                                        ) : (null)
+                                                    }
+
+                                                    <RemoveIcon name="check" onPress={() => savePin(projectImage.id)} />
                                                 </ProjectPinHolder>
                                             ) : (
-                                                <PinIcon name="push-pin" onPress={() => setPining(true)} />
+                                                <>
+                                                    <RemoveIcon name="close" onPress={() => removeImage(projectImage.id)} />
+                                                    <PinIcon name="push-pin" onPress={() => setPining(true)} />
+                                                </>
                                             )
                                         }
                                     </ProjectImagePreviewContainer>
@@ -181,16 +238,28 @@ const CreateScreenImageCarousel = styled.ScrollView`
     height: 300px;
 `;
 
-const ProjectPinHolder = styled(PanGestureHandler)`
+const ProjectPinHolder = styled.TouchableOpacity`
     width: 100%;
     height: 100%;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
 `;
 
 const ProjectImagePreviewContainer = styled.View`
     position: relative;
     width: ${`${windowWidth}px`};
     height: 300px;
+`;
+
+const PinDescription = styled.View`
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 11;
+    top: 0;
+    left: 0;
+    background-color: #ffffff;
 `;
 
 const ProjectImage = styled.Image`
@@ -224,14 +293,13 @@ const RemoveIcon = styled(MaterialIcon)`
     color: #000000;
 `;
 
-const PinHolder = styled(Animated.View)`
+const PinHolder = styled.TouchableOpacity`
     width: 50px;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 100px;
-    z-index: 10;
     background-color: red;
     position: absolute;
     border: 3px solid #000000;
@@ -248,8 +316,6 @@ const PinIcon = styled(MaterialIcon)`
 
 const PinDraggableIcon = styled(MaterialIcon)`
     font-size: 35px;
-    position: absolute;
-    z-index: 10;
     color: #000000;
 `;
 
@@ -278,6 +344,7 @@ const AddProjectImageOption = styled.TouchableOpacity`
     justify-content: flex-start;
     flex-direction: row;
     background-color: #ffffff;
+    margin: 0 0 2px 0;
 `;
 
 export {
