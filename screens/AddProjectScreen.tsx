@@ -23,6 +23,7 @@ interface ProjectImage{
 
 export default function AddProjectScreen() {
     const [projectName, setProjectName] = useState("");
+    const [projectDescription, setProjectDescription] = useState("");
     const [projectImages, setProjectImages] = useState<ProjectImage[]>([]);
     const [pining, setPining] = useState(false);
     const [pinX, setPinX] = useState<number>(10);
@@ -97,8 +98,8 @@ export default function AddProjectScreen() {
 
             <DescriptionInput  
                 placeholder="Enter project description"
-                defaultValue={projectName}
-                onChangeText={(projectName) => setProjectName(projectName)}
+                defaultValue={projectDescription}
+                onChangeText={(projectDescription) => setProjectDescription(projectName)}
                 numberOfLines={4}
                 textAlignVertical="top"
             />
