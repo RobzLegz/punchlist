@@ -55,9 +55,7 @@ const saveProject = async (name: string, description: string, pictures: ProjectI
 
     await removeItemFromStore("projects");
 
-    let newProjects: Project[] = Array(projects.push(newProject));
-
-    await saveItem("projects", JSON.stringify(newProjects));
+    await saveItem("projects", JSON.stringify(projects.push(newProject)));
 
     dispatch(addNewProject(newProject));
 
