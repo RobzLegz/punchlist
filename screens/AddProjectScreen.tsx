@@ -24,6 +24,8 @@ export default function AddProjectScreen() {
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
     const [pinDescription, setPinDescription] = useState("");
+    const [activePinId, setActivePinId] = useState<number | null>(null);
+    const [activeImageId, setActiveImageId] = useState<number | null>(null);
     const [showPinDescription, setShowPinDescription] = useState(false);
     const [projectImages, setProjectImages] = useState<ProjectImage[]>([]);
     const [pining, setPining] = useState(false);
@@ -81,8 +83,6 @@ export default function AddProjectScreen() {
     }
 
     const savePin = (imageId: number) => {
-        
-
         let pinImage = projectImages.find(img => img.id === imageId);
         if(!pinImage){
             return;
@@ -102,9 +102,32 @@ export default function AddProjectScreen() {
         setPinY(10);
     }
     
-    const seePinDescription = (description: string) => {
+    const seePinDescription = (description: string, pinId: number | null, imageId: number | null) => {
         setPinDescription(description);
         setShowPinDescription(!showPinDescription);
+        
+        setActivePinId(pinId);
+        setActiveImageId(imageId);
+    }
+
+    const savePinDescription = () => {
+        let pinImage = projectImages.find(img => img.id === activeImageId);
+        if(!pinImage){
+            return;
+        }
+
+        let activePin = pinImage.pins.find(pin => pin.id === activePinId);
+        if(!activePin){
+            return;
+        }
+
+        activePin.description = pinDescription;
+
+        setPinDescription("");
+        setShowPinDescription(false);
+        
+        setActivePinId(null);
+        setActiveImageId(null);
     }
 
     return (
@@ -147,9 +170,7 @@ export default function AddProjectScreen() {
                         {
                             projectImages.map((projectImage, i) => {
                                 return (
-                                    <ProjectImagePreviewContainer 
-                                        key={i}
-                                    >
+                                    <ProjectImagePreviewContainer key={i}>
                                         <ProjectImage 
                                             source={{uri: projectImage.source}}
                                             style={{
@@ -160,12 +181,31 @@ export default function AddProjectScreen() {
                                         {
                                             showPinDescription ? (
                                                 <PinDescription>
-                                                    <DescriptionInput 
-                                                        numberOfLines={4}
-                                                        placeholder="Punch description"
-                                                        textAlignVertical="top"
+                                                    <PinDescriptionContainer>
+                                                        <PinDescriptionInput 
+                                                            numberOfLines={8}
+                                                            placeholder="Punch description"
+                                                            textAlignVertical="top"
+                                                            defaultValue={pinDescription}
+                                                            onChangeText={(pinDescription) => setPinDescription(pinDescription)}
+                                                        />
+                                                    </PinDescriptionContainer>
+                                                    
+                                                    <RemoveIcon 
+                                                        name="close" 
+                                                        onPress={() => seePinDescription("", null, null)} 
+                                                        style={{
+                                                            color: "#ffffff"
+                                                        }}
                                                     />
-                                                    <RemoveIcon name="close" onPress={() => seePinDescription("")} />
+
+                                                    <PinIcon 
+                                                        name="check" 
+                                                        style={{
+                                                            color: "#ffffff"
+                                                        }}
+                                                        onPress={savePinDescription}
+                                                    />
                                                 </PinDescription>
                                             ) : (null)
                                         }
@@ -179,7 +219,7 @@ export default function AddProjectScreen() {
                                                             top: pin.y,
                                                             left: pin.x
                                                         }}
-                                                        onPress={() => seePinDescription(pin.description)}
+                                                        onPress={() => seePinDescription(pin.description, pin.id, projectImage.id)}
                                                     >
                                                         <PinDraggableIcon name="push-pin" />
                                                     </PinHolder>
@@ -259,7 +299,20 @@ const PinDescription = styled.View`
     z-index: 11;
     top: 0;
     left: 0;
+    background: rgba(0, 0, 0, 0.6);
+`;
+
+const PinDescriptionContainer = styled.View`
+    width: 100%;
+    height: 100%;
+    padding: 50px 45px 0 5px;
+`;
+
+const PinDescriptionInput = styled.TextInput`
+    padding: 10px;
     background-color: #ffffff;
+    margin: 0 0 2px 0;
+    border: 2px solid #979393;
 `;
 
 const ProjectImage = styled.Image`
