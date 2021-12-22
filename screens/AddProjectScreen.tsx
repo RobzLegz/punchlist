@@ -5,7 +5,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import * as ImagePicker from "expo-image-picker";
 import { Dimensions } from "react-native";
 import { PanGestureHandler, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
-import { useAnimatedGestureHandler, useSharedValue } from "react-native-reanimated";
+import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 
 const windowWidth = Math.floor(Dimensions.get("window").width);
 
@@ -26,8 +26,6 @@ export default function AddProjectScreen() {
     const [projectDescription, setProjectDescription] = useState("");
     const [projectImages, setProjectImages] = useState<ProjectImage[]>([]);
     const [pining, setPining] = useState(false);
-    const [pinX, setPinX] = useState<number>(10);
-    const [pinY, setPinY] = useState<number>(10);
 
     const translateX = useSharedValue(0);
 
@@ -76,10 +74,20 @@ export default function AddProjectScreen() {
 
         },
         onActive: (event) => {
+            translateX.value = event.translationX;
             console.log(event)
         },
         onEnd: (event) => {
+        }
+    })
 
+    const movablePinStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                    translateX: translateX.value
+                }
+            ]
         }
     })
 
@@ -122,34 +130,32 @@ export default function AddProjectScreen() {
                         {
                             projectImages.map((projectImage, i) => {
                                 return (
-                                    <ProjectPinHolder 
+                                    <ProjectImagePreviewContainer 
                                         key={i}
                                     >
-                                        <ProjectImagePreviewContainer>
-                                            <RemoveIcon name="close" />
+                                        <RemoveIcon name="close" />
 
-                                            <ProjectImage 
-                                                source={{uri: projectImage.source}}
-                                                style={{
-                                                    resizeMode: "cover"
-                                                }}
-                                            />
+                                        <ProjectImage 
+                                            source={{uri: projectImage.source}}
+                                            style={{
+                                                resizeMode: "cover"
+                                            }}
+                                        />
 
-                                            {
-                                                pining ? (
-                                                    <PinDraggableIcon 
-                                                        name="push-pin" 
-                                                        style={{
-                                                            top: pinY,
-                                                            left: pinX,
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <PinIcon name="push-pin" onPress={() => setPining(true)} />
-                                                )
-                                            }
-                                        </ProjectImagePreviewContainer>
-                                    </ProjectPinHolder>
+                                        {
+                                            pining ? (
+                                                <ProjectPinHolder
+                                                    onGestureEvent={panGestureEvent}
+                                                >
+                                                    <PinHolder style={[movablePinStyle]}>
+                                                        <PinDraggableIcon name="push-pin" />
+                                                    </PinHolder>
+                                                </ProjectPinHolder>
+                                            ) : (
+                                                <PinIcon name="push-pin" onPress={() => setPining(true)} />
+                                            )
+                                        }
+                                    </ProjectImagePreviewContainer>
                                 )
                             })
                         }
@@ -176,16 +182,15 @@ const CreateScreenImageCarousel = styled.ScrollView`
 `;
 
 const ProjectPinHolder = styled(PanGestureHandler)`
-    width: ${`${windowWidth}px`};
-    height: 300px;
-    background-color: red;
+    width: 100%;
+    height: 100%;
+    position: relative;
 `;
 
 const ProjectImagePreviewContainer = styled.View`
     position: relative;
-    width: 100%;
-    height: 100%;
-    background-color: red;
+    width: ${`${windowWidth}px`};
+    height: 300px;
 `;
 
 const ProjectImage = styled.Image`
@@ -217,6 +222,19 @@ const RemoveIcon = styled(MaterialIcon)`
     right: 5px;
     z-index: 10;
     color: #000000;
+`;
+
+const PinHolder = styled(Animated.View)`
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100px;
+    z-index: 10;
+    background-color: red;
+    position: absolute;
+    border: 3px solid #000000;
 `;
 
 const PinIcon = styled(MaterialIcon)`
