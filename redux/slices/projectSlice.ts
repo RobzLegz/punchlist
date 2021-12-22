@@ -1,15 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface Pin{
+    x: number;
+    y: number;
+    id: number;
+    description: string;
+}
 
+interface ProjectImage{
+    id: number;
+    source: string;
+    pins: Pin[];
 }
 
 interface Project{
-    id: string;
+    id: number;
     name: string;
     description: string;
-    pictures: string[];
-    pins: Pin[];
+    pictures: ProjectImage[];
 }
 
 interface State{
@@ -27,11 +35,15 @@ export const projectSlice = createSlice({
         setProjects: (state, action) => {
             state.projects = action.payload;
         },
+        addNewProject: (state, action) => {
+            state.projects?.push(action.payload);
+        },
     },
 });
 
 export const {
     setProjects,
+    addNewProject
 } = projectSlice.actions;
 
 export const selectProject = (state: any) => state.project;

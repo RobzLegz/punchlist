@@ -1,7 +1,7 @@
 import * as SecureStore from "expo-secure-store";
 
-const saveItem = async (key: string, value: string | number | object | string[] | number[] | object[]) => {
-    await SecureStore.setItemAsync(key, JSON.stringify(value));
+const saveItem = async (key: string, value: string) => {
+    await SecureStore.setItemAsync(key, value);
 }
 
 const getItemFromStore = async(key: string) => {

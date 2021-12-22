@@ -4,6 +4,10 @@ import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import * as ImagePicker from "expo-image-picker";
 import { Dimensions, GestureResponderEvent } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { selectProject } from "../redux/slices/projectSlice";
+import { saveProject } from "../logic/projectOptions";
 
 const windowWidth = Math.floor(Dimensions.get("window").width);
 
@@ -20,7 +24,23 @@ interface ProjectImage{
     pins: Pin[];
 }
 
+interface Project{
+    id: number;
+    name: string;
+    description: string;
+    pictures: ProjectImage[];
+}
+
+interface ProjectInfo{
+    projects: Project[] | null;
+}
+
 export default function AddProjectScreen() {
+    const projectInfo: ProjectInfo = useSelector(selectProject);
+
+    const navigation: any = useNavigation();
+    const dispatch = useDispatch();
+
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
     const [pinDescription, setPinDescription] = useState("");
@@ -130,11 +150,18 @@ export default function AddProjectScreen() {
         setActiveImageId(null);
     }
 
+    if(!projectInfo.projects){
+        return null;
+    }
+
     return (
         <CreateScreenBody>
             <AddProjectHeader>
                 <HeaderBackIcon name="arrowleft" />
+
                 <AddProjectHeaderText>Add project</AddProjectHeaderText>
+
+                <RemoveIcon name="check" onPress={() => saveProject(projectName, projectDescription, projectImages, projectInfo.projects, dispatch, navigation)} />
             </AddProjectHeader>
 
             <DescriptionInput  

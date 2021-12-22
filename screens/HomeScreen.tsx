@@ -1,21 +1,28 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react"
-import { Animated, PanResponder } from "react-native";
 import { useSelector } from "react-redux";
 import styled from "styled-components/native";
 import Project from "../components/Project";
 import { selectProject } from "../redux/slices/projectSlice";
 
 interface Pin{
-    
+    x: number;
+    y: number;
+    id: number;
+    description: string;
+}
+
+interface ProjectImage{
+    id: number;
+    source: string;
+    pins: Pin[];
 }
 
 interface Project{
-    id: string;
+    id: number;
     name: string;
     description: string;
-    pictures: string[];
-    pins: Pin[];
+    pictures: ProjectImage[];
 }
 
 interface ProjectInfo{
@@ -26,6 +33,10 @@ export default function HomeScreen() {
     const projectInfo: ProjectInfo = useSelector(selectProject);
 
     const navigation: any = useNavigation();
+
+    if(!projectInfo.projects){
+        return null;
+    }
 
     return (
         <StyledHome>

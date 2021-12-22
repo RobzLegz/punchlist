@@ -1,18 +1,25 @@
-import { getItemFromStore } from "./store";
-import { uuid } from "uuidv4";
+import { getItemFromStore, removeItemFromStore, saveItem } from "./store";
 import { Dispatch } from "redux";
-import { setProjects } from "../redux/slices/projectSlice";
+import { addNewProject, setProjects } from "../redux/slices/projectSlice";
 
 interface Pin{
-    
+    x: number;
+    y: number;
+    id: number;
+    description: string;
+}
+
+interface ProjectImage{
+    id: number;
+    source: string;
+    pins: Pin[];
 }
 
 interface Project{
-    id: string;
+    id: number;
     name: string;
     description: string;
-    pictures: string[];
-    pins: Pin[];
+    pictures: ProjectImage[];
 }
 
 const getProjects = async (dispatch: Dispatch) => {
@@ -26,10 +33,35 @@ const getProjects = async (dispatch: Dispatch) => {
     dispatch(setProjects(formatted_projects));
 }
 
-const saveProject = async (projects: Project[]) => {
-    let newProject = {
-        id: uuid()
+const saveProject = async (name: string, description: string, pictures: ProjectImage[], projects: Project[] | null, dispatch: Dispatch, navigation: any) => {
+    if(!projects){
+        return;
     }
+
+    if(!name){
+        return alert("Enter project name");
+    }
+
+    if(!description){
+        return alert("Enter project description");
+    }
+   
+    let newProject: Project = {
+        id: projects.length + 1,
+        name: name,
+        description: description,
+        pictures: pictures
+    }
+
+    await removeItemFromStore("projects");
+
+    let newProjects: Project[] = Array(projects.push(newProject));
+
+    await saveItem("projects", JSON.stringify(newProjects));
+
+    dispatch(addNewProject(newProject));
+
+    navigation.navigate("Home");
 }
 
 const deleteProject = () => {
