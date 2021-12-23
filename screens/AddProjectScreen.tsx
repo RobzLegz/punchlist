@@ -28,7 +28,7 @@ interface Project{
     id: number;
     name: string;
     description: string;
-    date: Date;
+    date: string;
     pictures: ProjectImage[];
 }
 
@@ -431,5 +431,15 @@ const AddProjectImageOption = styled.TouchableOpacity`
 export {
     HeaderBackIcon,
     AddProjectHeaderText,
-    AddProjectHeader
+    AddProjectHeader,
+    CreateScreenBody,
+    CreateScreenImageCarousel,
+    ProjectPinHolder,
+    ProjectImagePreviewContainer,
+    PinDescription,
+    PinDescriptionContainer,
+    PinDraggableIcon,
+    RemoveIcon,
+    PinHolder,
+    windowWidth
 }

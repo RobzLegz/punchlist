@@ -28,7 +28,7 @@ interface Props{
 }
 
 const Project: React.FC<Props> = ({data}) => {
-    if(typeof(data) !== "object" || !data){
+    if(!data){
         return null;
     }
 
@@ -59,6 +59,7 @@ const StyledProject = styled.TouchableOpacity`
     border-radius: 10px;
     padding: 10px;
     justify-content: space-between;
+    margin: 10px 0;
 `;
 
 const StyledProjectName = styled.Text`
