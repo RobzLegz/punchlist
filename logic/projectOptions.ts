@@ -55,7 +55,7 @@ const saveProject = async (name: string, description: string, pictures: ProjectI
         date: new Date()
     }
 
-    await saveItem("projects", JSON.stringify([...projects, newProject]));
+    await saveItem("projects", JSON.stringify([newProject, ...projects]));
 
     dispatch(addNewProject(newProject));
 

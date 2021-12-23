@@ -37,7 +37,9 @@ export const projectSlice = createSlice({
             state.projects = action.payload;
         },
         addNewProject: (state, action) => {
-            state.projects?.push(action.payload);
+            if(state.projects){
+                state.projects.concat(action.payload);
+            }
         },
     },
 });

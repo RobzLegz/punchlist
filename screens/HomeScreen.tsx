@@ -45,6 +45,8 @@ export default function HomeScreen() {
             </StyledAddProjectButton>
 
             <StyledProjectList
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(item: any) => "" + item.id}
                 data={projectInfo.projects}
                 renderItem={({item}) => {
                     return (
@@ -53,7 +55,6 @@ export default function HomeScreen() {
                         />
                     )
                 }}
-                keyExtractor={(item: any) => "" + item.id}
             />
         </StyledHome>
     )
