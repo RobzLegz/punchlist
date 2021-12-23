@@ -41,12 +41,18 @@ export const projectSlice = createSlice({
                 state.projects.push(action.payload);
             }
         },
+        removeProject: (state, action) => {
+            if(state.projects){
+                state.projects = state.projects.filter(project => project.id !== action.payload);
+            }
+        },
     },
 });
 
 export const {
     setProjects,
-    addNewProject
+    addNewProject,
+    removeProject
 } = projectSlice.actions;
 
 export const selectProject = (state: any) => state.project;

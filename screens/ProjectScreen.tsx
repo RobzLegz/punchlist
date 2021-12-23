@@ -1,7 +1,9 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useState } from "react"
-import { View, Text } from "react-native"
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/native";
+import { deleteProject } from "../logic/projectOptions";
+import { selectProject } from "../redux/slices/projectSlice";
 import { AddProjectHeader, AddProjectHeaderText, CreateScreenBody, CreateScreenImageCarousel, HeaderBackIcon, PinDescription, PinDraggableIcon, PinHolder, ProjectImagePreviewContainer, RemoveIcon, windowWidth } from "./AddProjectScreen";
 
 interface Pin{
@@ -25,36 +27,39 @@ interface Project{
     pictures: ProjectImage[];
 }
 
+interface ProjectInfo{
+    projects: Project[] | null;
+}
+
 export default function ProjectScreen() {
+    const projectInfo: ProjectInfo = useSelector(selectProject);
+
     const {params} = useRoute<any>();
 
+    const dispatch = useDispatch();
     const navigation: any = useNavigation();
 
-    const [projectInfo] = useState<Project | null | undefined>(params?.data);
+    const [projectData] = useState<Project | null | undefined>(params?.data);
     const [showPinDescription, setShowPinDescription] = useState(false);
     const [pinDescription, setPinDescription] = useState("");
-    const [activePinId, setActivePinId] = useState<number | null>(null);
-    const [activeImageId, setActiveImageId] = useState<number | null>(null);
-    const [projectImages, setProjectImages] = useState<ProjectImage[]>([]);
-    const [pining, setPining] = useState(false);
 
-    if(!projectInfo){
+    if(!projectData){
         return null;
     }
 
-    const seePinDescription = (description: string, pinId: number | null, imageId: number | null) => {
+    const seePinDescription = (description: string) => {
         setPinDescription(description);
         setShowPinDescription(!showPinDescription);
-        
-        setActivePinId(pinId);
-        setActiveImageId(imageId);
     }
 
     return (
         <CreateScreenBody>
             <AddProjectHeader>
                 <HeaderBackIcon name="arrowleft" onPress={() => navigation.goBack()} />
-                <AddProjectHeaderText>{projectInfo.name}</AddProjectHeaderText>
+
+                <AddProjectHeaderText>{projectData.name}</AddProjectHeaderText>
+
+                <RemoveIcon name="delete" onPress={() => deleteProject(projectData.id, projectInfo.projects, dispatch, navigation)} />
             </AddProjectHeader>
 
             <CreateScreenImageCarousel
@@ -66,7 +71,7 @@ export default function ProjectScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {
-                    projectInfo.pictures.map((projectImage, i) => {
+                    projectData.pictures.map((projectImage, i) => {
                         return (
                             <ProjectImagePreviewContainer key={i}>
                                 <ProjectImage 
@@ -87,7 +92,7 @@ export default function ProjectScreen() {
                                             
                                             <RemoveIcon 
                                                 name="close" 
-                                                onPress={() => seePinDescription("", null, null)} 
+                                                onPress={() => seePinDescription("")} 
                                                 style={{
                                                     color: "#ffffff"
                                                 }}
@@ -105,7 +110,7 @@ export default function ProjectScreen() {
                                                     top: pin.y,
                                                     left: pin.x
                                                 }}
-                                                onPress={() => seePinDescription(pin.description, pin.id, projectImage.id)}
+                                                onPress={() => seePinDescription(pin.description)}
                                             >
                                                 <PinDraggableIcon name="push-pin" />
                                             </PinHolder>
@@ -119,7 +124,7 @@ export default function ProjectScreen() {
             </CreateScreenImageCarousel>
 
             <ProjectDescriptionContainer>
-                <ProjectDescriptionText>{projectInfo.description}</ProjectDescriptionText>
+                <ProjectDescriptionText>{projectData.description}</ProjectDescriptionText>
             </ProjectDescriptionContainer>
         </CreateScreenBody>
     )

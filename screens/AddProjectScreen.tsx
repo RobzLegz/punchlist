@@ -158,7 +158,7 @@ export default function AddProjectScreen() {
     return (
         <CreateScreenBody>
             <AddProjectHeader>
-                <HeaderBackIcon name="arrowleft" />
+                <HeaderBackIcon name="arrowleft" onPress={() => navigation.goBack()} />
 
                 <AddProjectHeaderText>Add project</AddProjectHeaderText>
 

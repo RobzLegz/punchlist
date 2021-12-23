@@ -1,6 +1,6 @@
 import { getItemFromStore, removeItemFromStore, saveItem } from "./store";
 import { Dispatch } from "redux";
-import { addNewProject, setProjects } from "../redux/slices/projectSlice";
+import { addNewProject, removeProject, setProjects } from "../redux/slices/projectSlice";
 
 interface Pin{
     x: number;
@@ -68,8 +68,18 @@ const saveProject = async (name: string, description: string, pictures: ProjectI
     navigation.navigate("Home");
 }
 
-const deleteProject = () => {
+const deleteProject = async (id: number, projects: Project[] | null, dispatch: Dispatch, navigation: any) => {
+    if(!projects){
+        return;
+    }
 
+    let updatedProjects = projects.filter((project) => project.id !== id);
+    
+    await saveItem("projects", JSON.stringify(updatedProjects));
+
+    dispatch(removeProject(id));
+
+    navigation.navigate("Home");
 }
 
 export {
