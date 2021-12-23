@@ -19,6 +19,7 @@ interface Project{
     id: number;
     name: string;
     description: string;
+    date: Date;
     pictures: ProjectImage[];
 }
 
@@ -50,10 +51,9 @@ const saveProject = async (name: string, description: string, pictures: ProjectI
         id: projects.length + 1,
         name: name,
         description: description,
-        pictures: pictures
+        pictures: pictures,
+        date: new Date()
     }
-
-    await removeItemFromStore("projects");
 
     await saveItem("projects", JSON.stringify([...projects, newProject]));
 

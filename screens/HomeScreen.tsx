@@ -18,7 +18,7 @@ interface ProjectImage{
     pins: Pin[];
 }
 
-interface Project{
+interface ProjectInterface{
     id: number;
     name: string;
     description: string;
@@ -26,7 +26,7 @@ interface Project{
 }
 
 interface ProjectInfo{
-    projects: Project[] | null;
+    projects: ProjectInterface[] | null;
 }
 
 export default function HomeScreen() {
@@ -46,11 +46,15 @@ export default function HomeScreen() {
 
             <StyledProjectList
                 data={projectInfo.projects}
-                renderItem={Project}
-                keyExtractor={item => "" + item}
-            >
-
-            </StyledProjectList>
+                renderItem={({item}) => {
+                    return (
+                        <Project     
+                            data={item}
+                        />
+                    )
+                }}
+                keyExtractor={(item: any) => "" + item.id}
+            />
         </StyledHome>
     )
 }
