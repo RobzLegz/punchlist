@@ -17,7 +17,7 @@ interface Project{
     id: number;
     name: string;
     description: string;
-    date: Date;
+    date: string;
     pictures: ProjectImage[];
 }
 
@@ -38,7 +38,7 @@ export const projectSlice = createSlice({
         },
         addNewProject: (state, action) => {
             if(state.projects){
-                state.projects.concat(action.payload);
+                state.projects.push(action.payload);
             }
         },
     },

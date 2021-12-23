@@ -70,6 +70,7 @@ const StyledHome = styled.View`
 
 const StyledProjectList = styled.FlatList`
     width: 100%;
+    padding: 30px 0 0 0;
 `;
 
 const StyledAddProjectButton = styled.TouchableOpacity`

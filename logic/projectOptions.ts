@@ -19,7 +19,7 @@ interface Project{
     id: number;
     name: string;
     description: string;
-    date: Date;
+    date: string;
     pictures: ProjectImage[];
 }
 
@@ -46,13 +46,19 @@ const saveProject = async (name: string, description: string, pictures: ProjectI
     if(!description){
         return alert("Enter project description");
     }
+
+    let day = new Date().getDay();
+    let month = new Date().getMonth();
+    let year = new Date().getFullYear();
+
+    let date = `${day}/${month}/${year}`
    
     let newProject: Project = {
         id: projects.length + 1,
         name: name,
         description: description,
         pictures: pictures,
-        date: new Date()
+        date: date
     }
 
     await saveItem("projects", JSON.stringify([newProject, ...projects]));

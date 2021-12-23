@@ -1,5 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react"
-import { View, Text } from "react-native"
 import styled from "styled-components/native";
 
 interface Pin{
@@ -32,20 +32,44 @@ const Project: React.FC<Props> = ({data}) => {
         return null;
     }
 
-    const [projectData] = useState<Project>(data);
+    const navigation: any = useNavigation();
+
+    const [projectData] = useState<any>(data);
 
     return (
-        <StyledProject>
-            <Text>{projectData.name}</Text>
+        <StyledProject 
+            onPress={() => navigation.navigate({
+                name: "Project", 
+                params: {
+                    data: projectData
+                }
+            })}
+        >
+            <StyledProjectName>{projectData.name}</StyledProjectName>
+
+            <StyledProjectDate>{projectData.date}</StyledProjectDate>
         </StyledProject>
     )
 }
 
-const StyledProject = styled.View`
+const StyledProject = styled.TouchableOpacity`
     width: 100%;
-    height: 300px;
-    background-color: #f2f2f2;
-    border-radius: 20px;
+    height: 100px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    justify-content: space-between;
 `;
+
+const StyledProjectName = styled.Text`
+    font-size: 20px;
+    color: #000000;
+`;
+
+const StyledProjectDate = styled.Text`
+    font-size: 18px;
+    color: #000000;
+`;
+
 
 export default Project;
