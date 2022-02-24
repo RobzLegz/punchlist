@@ -16,6 +16,8 @@ interface Pin{
     y: number;
     id: number;
     description: string;
+    image: string;
+    parent: number;
 }
 
 interface ProjectImage{
@@ -43,13 +45,13 @@ export default function AddProjectScreen() {
     const dispatch = useDispatch();
 
     const [projectName, setProjectName] = useState("");
+    const [pinImage, setPinImage] = useState<null | string>("");
     const [projectDescription, setProjectDescription] = useState("");
     const [pinDescription, setPinDescription] = useState("");
-    const [activePinId, setActivePinId] = useState<number | null>(null);
     const [activeImageId, setActiveImageId] = useState<number | null>(null);
-    const [showPinDescription, setShowPinDescription] = useState(false);
     const [projectImages, setProjectImages] = useState<ProjectImage[]>([]);
     const [pining, setPining] = useState(false);
+    const [checkingPin, setCheckingPin] = useState<null | Pin>(null);
 
     const [pinX, setPinX] = useState(10);
     const [pinY, setPinY] = useState(10);
@@ -92,6 +94,43 @@ export default function AddProjectScreen() {
         }
     };
 
+    const selectPinImage = async () => {
+        if(!checkingPin){
+            return;
+        }
+
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if(status === "granted"){
+            const response = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+            });
+
+            if(response.cancelled) {
+                return;  
+            }
+
+            const imageUri = response.uri;
+
+            const pinImage = projectImages.find(img => img.id === checkingPin.parent);
+            if(!pinImage){
+                return;
+            }
+
+            const activePin = pinImage.pins.find(p => p.id === checkingPin.id);
+            if(!activePin){
+                return;
+            }
+
+            activePin.image = imageUri;
+            setPinImage(imageUri);
+            setCheckingPin(activePin);
+        }
+    };
+
+    console.log(checkingPin)
+
     const removeImage = (imageId: number) => {
         let restProjectImages = projectImages.filter((img) => img.id !== imageId);
         
@@ -113,7 +152,9 @@ export default function AddProjectScreen() {
             id: pinImage.pins.length + 1,
             x: pinX,
             y: pinY,
-            description: ""
+            description: "",
+            image: "",
+            parent: imageId
         }
 
         pinImage.pins = [...pinImage.pins, newPin];
@@ -123,32 +164,24 @@ export default function AddProjectScreen() {
         setPinY(10);
     }
     
-    const seePinDescription = (description: string, pinId: number | null, imageId: number | null) => {
-        setPinDescription(description);
-        setShowPinDescription(!showPinDescription);
-        
-        setActivePinId(pinId);
-        setActiveImageId(imageId);
-    }
-
     const savePinDescription = () => {
-        let pinImage = projectImages.find(img => img.id === activeImageId);
-        if(!pinImage){
+        if(!checkingPin){
             return;
         }
 
-        let activePin = pinImage.pins.find(pin => pin.id === activePinId);
+        const activePinImage = projectImages.find(img => img.id === checkingPin.parent);
+        if(!activePinImage){
+            return;
+        }
+
+        const activePin = activePinImage.pins.find(pin => pin.id === checkingPin.id);
         if(!activePin){
             return;
         }
 
         activePin.description = pinDescription;
 
-        setPinDescription("");
-        setShowPinDescription(false);
-        
-        setActivePinId(null);
-        setActiveImageId(null);
+        setCheckingPin(null);
     }
 
     if(!projectInfo.projects){
@@ -207,9 +240,14 @@ export default function AddProjectScreen() {
                                         />
 
                                         {
-                                            showPinDescription ? (
+                                            checkingPin ? (
                                                 <PinDescription>
-                                                    <PinDescriptionContainer>
+                                                    <PinDescriptionContainer
+                                                        contentContainerStyle={{
+                                                            alignItems: "center",
+                                                            justifyContent: "flex-start"
+                                                        }}
+                                                    >
                                                         <PinDescriptionInput 
                                                             numberOfLines={8}
                                                             placeholder="Punch description"
@@ -217,22 +255,36 @@ export default function AddProjectScreen() {
                                                             defaultValue={pinDescription}
                                                             onChangeText={(pinDescription) => setPinDescription(pinDescription)}
                                                         />
+
+                                                        {
+                                                            checkingPin.image ? (
+                                                                <PinImage 
+                                                                    source={{uri: checkingPin.image}}
+                                                                    style={{
+                                                                        resizeMode: "cover",
+                                                                    }}
+                                                                />
+                                                            ) : (null)
+                                                        }
+                                                        
                                                     </PinDescriptionContainer>
                                                     
                                                     <RemoveIcon 
                                                         name="close" 
-                                                        onPress={() => seePinDescription("", null, null)} 
-                                                        style={{
-                                                            color: "#ffffff"
-                                                        }}
+                                                        onPress={() => setCheckingPin(null)} 
                                                     />
 
                                                     <PinIcon 
                                                         name="check" 
-                                                        style={{
-                                                            color: "#ffffff"
-                                                        }}
                                                         onPress={savePinDescription}
+                                                    />
+
+                                                    <PinIcon 
+                                                        style={{
+                                                            right: 80
+                                                        }}
+                                                        name="camera" 
+                                                        onPress={selectPinImage}
                                                     />
                                                 </PinDescription>
                                             ) : (null)
@@ -247,7 +299,7 @@ export default function AddProjectScreen() {
                                                             top: pin.y,
                                                             left: pin.x
                                                         }}
-                                                        onPress={() => seePinDescription(pin.description, pin.id, projectImage.id)}
+                                                        onPress={() => setCheckingPin(pin)}
                                                     >
                                                         <PinDraggableIcon name="push-pin" />
                                                     </PinHolder>
@@ -275,8 +327,14 @@ export default function AddProjectScreen() {
                                                 </ProjectPinHolder>
                                             ) : (
                                                 <>
-                                                    <RemoveIcon name="close" onPress={() => removeImage(projectImage.id)} />
-                                                    <PinIcon name="push-pin" onPress={() => setPining(true)} />
+                                                    <RemoveIcon
+                                                        name="close" 
+                                                        onPress={() => removeImage(projectImage.id)} 
+                                                    />
+                                                    <PinIcon
+                                                        name="push-pin" 
+                                                        onPress={() => setPining(true)} 
+                                                    />
                                                 </>
                                             )
                                         }
@@ -327,13 +385,19 @@ const PinDescription = styled.View`
     z-index: 11;
     top: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: #ffffff;
 `;
 
-const PinDescriptionContainer = styled.View`
+const PinImage = styled.Image`
     width: 100%;
     height: 100%;
-    padding: 50px 45px 0 5px;
+    margin: 300px 0 0 0;
+`;
+
+const PinDescriptionContainer = styled.ScrollView`
+    width: 100%;
+    display: flex;
+    margin-top: 50px;
 `;
 
 const PinDescriptionInput = styled.TextInput`
@@ -341,11 +405,14 @@ const PinDescriptionInput = styled.TextInput`
     background-color: #ffffff;
     margin: 0 0 2px 0;
     border: 2px solid #979393;
+    width: 100%;
+    height: 150px;
 `;
 
 const ProjectImage = styled.Image`
     width: 100%;
     height: 100%;
+    position: absolute;
 `;
 
 const AddProjectHeader = styled.View`
