@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { AppInfo, selectApp } from "../../redux/slices/appSlice";
 import { useSelector } from "react-redux";
@@ -9,7 +9,16 @@ const HomeContainer = () => {
 
   return (
     <View style={{ flex: 1, width: "100%" }}>
-      
+      <TouchableOpacity
+        style={{
+          width: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row",
+        }}
+      >
+        <Text>Jauns Projekts</Text>
+      </TouchableOpacity>
 
       <View
         style={{
