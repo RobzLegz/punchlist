@@ -1,8 +1,9 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, ScrollView,  } from "react-native";
 import React from "react";
 import { AppInfo, selectApp } from "../../redux/slices/appSlice";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import {TouchableOpacity} from "react-native-gesture-handler";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
@@ -10,8 +11,8 @@ const HomeContainer = () => {
   const appInfo: AppInfo = useSelector(selectApp);
 
   return (
-    <View style={{ flex: 1, width: "100%", position: "relative" }}>
-      <View style={{ flex: 1, width: "100%" }}>
+    <View style={{ width: "100%", height: "100%" }}>
+      <View style={{ width: "100%", flex: 1 }}>
         {appInfo.projects.length > 0 ? (
           <ScrollView></ScrollView>
         ) : (
@@ -24,7 +25,7 @@ const HomeContainer = () => {
               paddingHorizontal: 20,
             }}
           >
-            <Text style={{ color: "gray", fontSize: 18 }}>
+            <Text style={{ color: "gray", fontSize: 16 }}>
               Pagaidåm nav neviena projekta
             </Text>
           </View>
@@ -32,7 +33,10 @@ const HomeContainer = () => {
       </View>
 
       <View
-        style={{ width: "100%", padding: 15, position: "absolute", bottom: 0 }}
+        style={{
+          width: "100%",
+          padding: 15,
+        }}
       >
         <TouchableOpacity
           style={{
@@ -43,9 +47,8 @@ const HomeContainer = () => {
             height: 60,
             backgroundColor: "#000",
             borderRadius: 10,
-            zIndex: 10
           }}
-          onPress={() => navigation.navigate("Create")}
+          onPressIn={() => console.log("ok")}
         >
           <Text style={{ color: "#fff", fontSize: 16 }}>Jauns Projekts</Text>
         </TouchableOpacity>

@@ -11,7 +11,10 @@ import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Plan } from "../../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetScrollView,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
@@ -22,14 +25,6 @@ const HomeContainer = () => {
   const [blueprints, setBlueprints] = useState<Plan[]>([]);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-
-  // variables
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
 
   return (
     <View
@@ -123,17 +118,19 @@ const HomeContainer = () => {
           </View>
         </View>
       </ScrollView>
-{/* 
-      <View>
+
+      {/* <View>
         <BottomSheet
           ref={bottomSheetRef}
           index={1}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}
+          snapPoints={["25%", "50%"]}
         >
-          <View style={{}}>
+          <BottomSheetScrollView
+            style={{}}
+            showsHorizontalScrollIndicator={false}
+          >
             <Text>Awesome 🎉</Text>
-          </View>
+          </BottomSheetScrollView>
         </BottomSheet>
       </View> */}
     </View>

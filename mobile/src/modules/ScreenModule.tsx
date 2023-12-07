@@ -3,6 +3,7 @@ import { basicScreen } from "../styles/screens";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar, StatusBarStyle } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const ScreenModule: React.FC<{
   children?: React.ReactNode;
@@ -17,7 +18,9 @@ const ScreenModule: React.FC<{
       <SafeAreaView
         style={{ flex: 1, height: 0, backgroundColor: statusBgColor }}
       >
-        <View style={basicScreen}>{children}</View>
+        <GestureHandlerRootView>
+          <View style={basicScreen}>{children}</View>
+        </GestureHandlerRootView>
       </SafeAreaView>
     </Fragment>
   );
