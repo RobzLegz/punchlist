@@ -5,19 +5,18 @@ import {
   Text,
   TextInput,
 } from "react-native";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { AppInfo, selectApp } from "../../redux/slices/appSlice";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Plan } from "../../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
-import BottomSheet, {
-  BottomSheetScrollView,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useBottomSheet } from "@gorhom/bottom-sheet";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
+  const { expand } = useBottomSheet();
 
   const appInfo: AppInfo = useSelector(selectApp);
 
@@ -97,7 +96,7 @@ const HomeContainer = () => {
           >
             <Text style={{ color: "gray", fontSize: 16 }}>Blueprints</Text>
 
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={() => expand()}>
               <IonIcon name="add" size={28} color="gray" />
             </TouchableOpacity>
           </View>
@@ -119,12 +118,8 @@ const HomeContainer = () => {
         </View>
       </ScrollView>
 
-      {/* <View>
-        <BottomSheet
-          ref={bottomSheetRef}
-          index={1}
-          snapPoints={["25%", "50%"]}
-        >
+      <View>
+        <BottomSheet ref={bottomSheetRef} index={1} snapPoints={["25%", "50%"]}>
           <BottomSheetScrollView
             style={{}}
             showsHorizontalScrollIndicator={false}
@@ -132,7 +127,7 @@ const HomeContainer = () => {
             <Text>Awesome 🎉</Text>
           </BottomSheetScrollView>
         </BottomSheet>
-      </View> */}
+      </View>
     </View>
   );
 };
