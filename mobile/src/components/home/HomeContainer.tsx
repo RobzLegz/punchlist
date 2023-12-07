@@ -1,9 +1,9 @@
-import { View, Text, ScrollView,  } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React from "react";
 import { AppInfo, selectApp } from "../../redux/slices/appSlice";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import {TouchableOpacity} from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
@@ -48,7 +48,7 @@ const HomeContainer = () => {
             backgroundColor: "#000",
             borderRadius: 10,
           }}
-          onPressIn={() => console.log("ok")}
+          onPress={() => navigation.navigate("Create")}
         >
           <Text style={{ color: "#fff", fontSize: 16 }}>Jauns Projekts</Text>
         </TouchableOpacity>
