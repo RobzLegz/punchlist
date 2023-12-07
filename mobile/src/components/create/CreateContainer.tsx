@@ -11,19 +11,19 @@ import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Plan } from "../../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { useBottomSheet } from "@gorhom/bottom-sheet";
+// import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+// import { useBottomSheet } from "@gorhom/bottom-sheet";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
-  const { expand } = useBottomSheet();
+  // const { expand } = useBottomSheet();
 
   const appInfo: AppInfo = useSelector(selectApp);
 
   const [title, setTitle] = useState("");
   const [blueprints, setBlueprints] = useState<Plan[]>([]);
 
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  // const bottomSheetRef = useRef<BottomSheet>(null);
 
   return (
     <View
@@ -96,9 +96,9 @@ const HomeContainer = () => {
           >
             <Text style={{ color: "gray", fontSize: 16 }}>Blueprints</Text>
 
-            <TouchableOpacity onPress={() => expand()}>
+            {/* <TouchableOpacity onPress={() => expand()}>
               <IonIcon name="add" size={28} color="gray" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <View style={{ width: "100%", padding: 10 }}>

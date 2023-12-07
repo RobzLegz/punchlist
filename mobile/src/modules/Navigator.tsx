@@ -47,7 +47,7 @@ const Navigator = () => {
   }, []);
 
   if (!fontsLoaded) {
-    return null;
+    return <HomeScreen />;
   }
 
   return (
