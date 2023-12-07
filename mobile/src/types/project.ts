@@ -1,6 +1,6 @@
 export interface Project{
     title: string;
-    defects: Plan[];
+    blueprints: Plan[];
 }
 
 export interface Plan{

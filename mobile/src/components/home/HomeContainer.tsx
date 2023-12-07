@@ -43,6 +43,7 @@ const HomeContainer = () => {
             height: 60,
             backgroundColor: "#000",
             borderRadius: 10,
+            zIndex: 10
           }}
           onPress={() => navigation.navigate("Create")}
         >
