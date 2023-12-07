@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import HomeScreen from "../screens/Home";
-import CategoryScreen from "../screens/Category";
-import CameraScreen from "../screens/Camera";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
   useFonts,
@@ -13,7 +11,7 @@ import * as SplashScreen from "expo-splash-screen";
 import loadStateFromMMKV from "../middlewares/mmkvLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { AppInfo, selectApp } from "../redux/slices/appSlice";
-import TutorialScreen from "../screens/Tutorial";
+import CreateScreen from "../screens/Create";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -52,18 +50,6 @@ const Navigator = () => {
     return null;
   }
 
-  if (appInfo.tutorialOpen) {
-    return (
-      <Stack.Navigator initialRouteName="Tutorial">
-        <Stack.Screen
-          name="Tutorial"
-          component={TutorialScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    );
-  }
-
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
@@ -73,14 +59,8 @@ const Navigator = () => {
       />
 
       <Stack.Screen
-        name="Camera"
-        component={CameraScreen}
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name="Category"
-        component={CategoryScreen}
+        name="Create"
+        component={CreateScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
