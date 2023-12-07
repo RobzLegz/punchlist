@@ -118,7 +118,7 @@ const HomeContainer = () => {
         </View>
       </ScrollView>
 
-      <View>
+      {/* <View>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={["25%", "50%"]}>
           <BottomSheetScrollView
             style={{}}
@@ -127,7 +127,7 @@ const HomeContainer = () => {
             <Text>Awesome 🎉</Text>
           </BottomSheetScrollView>
         </BottomSheet>
-      </View>
+      </View> */}
     </View>
   );
 };

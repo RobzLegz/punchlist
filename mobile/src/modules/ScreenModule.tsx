@@ -16,7 +16,12 @@ const ScreenModule: React.FC<{
       <StatusBar backgroundColor={statusBgColor} style={barStyle} />
       <View style={{ flex: 0, backgroundColor: statusBgColor, height: 0 }} />
       <SafeAreaView
-        style={{ flex: 1, height: 0, backgroundColor: statusBgColor }}
+        style={{
+          flex: 1,
+          height: 0,
+          backgroundColor: statusBgColor,
+          position: "relative",
+        }}
       >
         <GestureHandlerRootView>
           <View style={basicScreen}>{children}</View>
