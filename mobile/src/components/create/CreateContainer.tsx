@@ -9,19 +9,19 @@ import {
   GestureResponderEvent,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { AppInfo, selectApp } from "../../redux/slices/appSlice";
-import { useSelector } from "react-redux";
+import { addNewProject } from "../../redux/slices/appSlice";
+import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Plan, Point } from "../../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
+import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import * as ImagePicker from "expo-image-picker";
 import { PIN_SIZE } from "../../constants";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
-
-  const appInfo: AppInfo = useSelector(selectApp);
+  const dispatch = useDispatch();
 
   const sheetRef = useRef<BottomSheet>(null);
 
@@ -80,6 +80,22 @@ const HomeContainer = () => {
     setNewBluePrint({ title: "", image: "", points: [] });
 
     sheetRef.current?.close();
+    setSheetOpen(false);
+  };
+
+  const handleProjectSave = () => {
+    if (!blueprints.length) {
+      return;
+    }
+
+    dispatch(
+      addNewProject({
+        title: title,
+        blueprints: blueprints,
+      })
+    );
+
+    navigation.navigate("Home");
   };
 
   const [Sheetopen, setSheetOpen] = useState(false);
@@ -91,6 +107,7 @@ const HomeContainer = () => {
         width: "100%",
         position: "relative",
         overflow: "hidden",
+        zIndex: 20,
       }}
     >
       <View
@@ -142,7 +159,6 @@ const HomeContainer = () => {
             width: "100%",
             borderWidth: 0.5,
             borderColor: "gray",
-            padding: 10,
             borderRadius: 5,
             marginTop: 8,
           }}
@@ -153,6 +169,9 @@ const HomeContainer = () => {
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
+              borderBottomWidth: 0.5,
+              marginBottom: 4,
+              padding: 10,
             }}
           >
             <Text style={{ color: "gray", fontSize: 16 }}>Blueprints</Text>
@@ -167,9 +186,38 @@ const HomeContainer = () => {
             </TouchableOpacity>
           </View>
 
-          <View style={{ width: "100%", padding: 10 }}>
+          <View style={{ width: "100%", padding: 10, paddingBottom: 4 }}>
             {blueprints.length > 0 ? (
-              <View></View>
+              <View>
+                {blueprints.map((bp, i) => (
+                  <TouchableOpacity
+                    style={{
+                      width: "100%",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      height: 48,
+                      paddingHorizontal: 10,
+                      borderRadius: 5,
+                      backgroundColor: i % 2 === 0 ? "#eee" : "#eee",
+                      marginBottom: 8,
+                    }}
+                    onPress={() => {
+                      setNewBluePrint(bp);
+                      setBlueprints(blueprints.filter((_, j) => j !== i));
+                      setSheetOpen(true);
+                      sheetRef.current?.snapToIndex(1);
+                    }}
+                    key={i}
+                  >
+                    <Text style={{ color: "gray", fontSize: 16 }}>
+                      {bp.title} | {bp.points.length} defekti
+                    </Text>
+
+                    <MaterialIcon name="edit" size={20} color="gray" />
+                  </TouchableOpacity>
+                ))}
+              </View>
             ) : (
               <View
                 style={{
@@ -177,6 +225,7 @@ const HomeContainer = () => {
                   height: 80,
                   justifyContent: "center",
                   alignItems: "center",
+                  padding: 10,
                 }}
               >
                 <Text style={{ color: "gray", fontSize: 14 }}>
@@ -211,6 +260,7 @@ const HomeContainer = () => {
         ref={sheetRef}
         onClose={() => setSheetOpen(false)}
         enablePanDownToClose
+        style={{ zIndex: 20 }}
       >
         <BottomSheetScrollView style={{ width: "100%", padding: 20 }}>
           <View
@@ -435,6 +485,33 @@ const HomeContainer = () => {
           )}
         </BottomSheetScrollView>
       </BottomSheet>
+
+      <View
+        style={{
+          width: "100%",
+          padding: 15,
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          zIndex: -5,
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+            height: 60,
+            backgroundColor: "#000",
+            borderRadius: 10,
+          }}
+          disabled={blueprints.length === 0 || !title}
+          onPress={handleProjectSave}
+        >
+          <Text style={{ color: "#fff", fontSize: 16 }}>Saglabåt</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
