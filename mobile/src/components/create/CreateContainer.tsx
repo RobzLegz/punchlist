@@ -95,8 +95,9 @@ const HomeContainer = () => {
       })
     );
 
-    navigation.navigate("Home");
+    navigation.goBack();
   };
+
 
   const [Sheetopen, setSheetOpen] = useState(false);
 
@@ -490,10 +491,6 @@ const HomeContainer = () => {
         style={{
           width: "100%",
           padding: 15,
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          zIndex: -5,
         }}
       >
         <TouchableOpacity
@@ -506,7 +503,6 @@ const HomeContainer = () => {
             backgroundColor: "#000",
             borderRadius: 10,
           }}
-          disabled={blueprints.length === 0 || !title}
           onPress={handleProjectSave}
         >
           <Text style={{ color: "#fff", fontSize: 16 }}>Saglabåt</Text>
