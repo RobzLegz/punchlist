@@ -1,4 +1,3 @@
-import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import React, { Fragment } from "react";
 import { basicScreen } from "../styles/screens";
@@ -25,7 +24,7 @@ const ScreenModule: React.FC<{
         }}
       >
         <GestureHandlerRootView style={{ flex: 1 }}>
-            <View style={basicScreen}>{children}</View>
+          <View style={basicScreen}>{children}</View>
         </GestureHandlerRootView>
       </SafeAreaView>
     </Fragment>
