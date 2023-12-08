@@ -24,9 +24,20 @@
     "ios": {
       "bundleIdentifier": "com.defecto.app",
       "buildNumber": "1",
+      "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+      "photosPermission":	"Allow $(PRODUCT_NAME) to access your photos",
       "infoPlist": {
         "NSCameraUsageDescription": "We need access to your camera to capture photos for saving memorable moments in our app. Your photos will only be used for in-app features and will not be shared with any third parties."
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to add building blueprints."
+        }
+      ]
+    ]
   }
 }

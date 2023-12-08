@@ -5,14 +5,18 @@ import {
   Text,
   TextInput,
   Pressable,
+  Image,
+  GestureResponderEvent,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { AppInfo, selectApp } from "../../redux/slices/appSlice";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { Plan } from "../../types/project";
+import { Plan, Point } from "../../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import * as ImagePicker from "expo-image-picker";
+import { PIN_SIZE } from "../../constants";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
@@ -23,7 +27,60 @@ const HomeContainer = () => {
 
   const [title, setTitle] = useState("");
   const [blueprints, setBlueprints] = useState<Plan[]>([]);
-  const [newBlueprintTitle, setNewBlueprintTitle] = useState("");
+
+  const [newBluePrint, setNewBluePrint] = useState<Plan>({
+    title: "",
+    image: "",
+    points: [],
+  });
+
+  const [newPin, setNewPin] = useState<Point | null>(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets.length && result.assets[0]) {
+      sheetRef.current?.snapToIndex(1);
+      setNewBluePrint({ ...newBluePrint, image: result.assets[0].uri });
+    }
+  };
+
+  const addNewPin = (event: GestureResponderEvent) => {
+    setNewPin({
+      geo: null,
+      coords: {
+        x: event.nativeEvent.locationX - PIN_SIZE / 2,
+        y: event.nativeEvent.locationY - PIN_SIZE / 2,
+      },
+      description: "",
+      irl_image: null,
+    });
+  };
+
+  const handleSavePin = () => {
+    if (!newPin) {
+      return;
+    }
+
+    setNewBluePrint({
+      ...newBluePrint,
+      points: [...newBluePrint.points, newPin],
+    });
+
+    setNewPin(null);
+  };
+
+  const handleSaveBlueprint = () => {
+    setBlueprints([...blueprints, newBluePrint]);
+
+    setNewBluePrint({ title: "", image: "", points: [] });
+
+    sheetRef.current?.close();
+  };
 
   const [Sheetopen, setSheetOpen] = useState(false);
 
@@ -150,7 +207,7 @@ const HomeContainer = () => {
 
       <BottomSheet
         index={-1}
-        snapPoints={["70%"]}
+        snapPoints={["40%", "80%"]}
         ref={sheetRef}
         onClose={() => setSheetOpen(false)}
         enablePanDownToClose
@@ -177,32 +234,205 @@ const HomeContainer = () => {
                 fontSize: 16,
                 color: "gray",
               }}
-              onChangeText={(txt) => setNewBlueprintTitle(txt)}
-              value={newBlueprintTitle}
+              onChangeText={(txt) =>
+                setNewBluePrint({ ...newBluePrint, title: txt })
+              }
+              value={newBluePrint.title}
               placeholder="Nosaukums"
             />
           </View>
 
-          <TouchableOpacity
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              height: 44,
-              borderRadius: 5,
-              borderWidth: 0.5,
-              borderColor: "gray",
-              marginTop: 12,
-              paddingHorizontal: 5,
-            }}
-          >
-            <IonIcon name="add" size={28} color="gray" />
+          {newBluePrint.image ? (
+            <View
+              style={{
+                width: "100%",
+                marginTop: 12,
+                position: "relative",
+                alignItems: "center",
+                justifyContent: "flex-start",
+              }}
+            >
+              <TouchableOpacity
+                style={{ width: "100%" }}
+                activeOpacity={1}
+                onPress={(e) => addNewPin(e)}
+              >
+                <Image
+                  source={{ uri: newBluePrint.image }}
+                  style={{ width: "100%", height: 360, resizeMode: "contain" }}
+                />
+              </TouchableOpacity>
 
-            <Text style={{ color: "gray", fontSize: 16, marginLeft: 4 }}>
-              Pievienot rasejumu
-            </Text>
-          </TouchableOpacity>
+              {newBluePrint.points.map((p, i) => (
+                <TouchableOpacity
+                  key={i}
+                  disabled={newPin ? true : false}
+                  style={{
+                    position: "absolute",
+                    top: p.coords.y,
+                    left: p.coords.x,
+                    width: PIN_SIZE,
+                    height: PIN_SIZE,
+                    backgroundColor: "red",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 8,
+                    borderWidth: 2,
+                    borderColor: "#000",
+                    opacity: newPin ? 0.4 : 1,
+                  }}
+                  onPress={() => {
+                    setNewPin(p);
+                    setNewBluePrint({
+                      ...newBluePrint,
+                      points: newBluePrint.points.filter((_, j) => j !== i),
+                    });
+                  }}
+                >
+                  <Text style={{ color: "white", fontSize: 28 }}>!</Text>
+                </TouchableOpacity>
+              ))}
+
+              {newPin ? (
+                <>
+                  <View
+                    style={{
+                      position: "absolute",
+                      top: newPin.coords.y,
+                      left: newPin.coords.x,
+                      width: PIN_SIZE,
+                      height: PIN_SIZE,
+                      backgroundColor: "red",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 8,
+                      borderWidth: 2,
+                      borderColor: "#000",
+                    }}
+                  >
+                    <Text style={{ color: "white", fontSize: 28 }}>!</Text>
+                  </View>
+
+                  <View style={{ width: "100%", marginTop: 12 }}>
+                    <Text style={{ color: "gray" }}>Defekta apraksts</Text>
+
+                    <TextInput
+                      multiline
+                      numberOfLines={3}
+                      onChangeText={(text) =>
+                        setNewPin({ ...newPin, description: text })
+                      }
+                      value={newPin.description}
+                      placeholder="Apraksts"
+                      style={{
+                        width: "100%",
+                        borderColor: "gray",
+                        borderWidth: 0.5,
+                        marginTop: 8,
+                        borderRadius: 5,
+                        padding: 10,
+                        fontSize: 16,
+                        color: "gray",
+                        textAlignVertical: "top",
+                      }}
+                    />
+
+                    <View style={{ width: "100%", flexDirection: "row" }}>
+                      <TouchableOpacity
+                        style={{
+                          flex: 1,
+                          backgroundColor: "#000",
+                          height: 50,
+                          borderRadius: 5,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginTop: 12,
+                          marginRight: 4,
+                        }}
+                        onPress={handleSavePin}
+                      >
+                        <Text style={{ color: "#fff", fontSize: 18 }}>
+                          Saglabåt
+                        </Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: "#fff",
+                          width: 100,
+                          height: 50,
+                          borderRadius: 5,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginTop: 12,
+                          marginLeft: 4,
+                          borderColor: "#000",
+                          borderWidth: 2,
+                        }}
+                        onPress={() => setNewPin(null)}
+                      >
+                        <Text style={{ color: "#000", fontSize: 18 }}>
+                          Dzest
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 18,
+                      color: "gray",
+                      marginTop: 12,
+                    }}
+                  >
+                    Pievienojiet defektus spiezot uz plana bildes.
+                  </Text>
+
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#000",
+                      width: "100%",
+                      height: 50,
+                      borderRadius: 5,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 20,
+                    }}
+                    onPress={handleSaveBlueprint}
+                  >
+                    <Text style={{ color: "#fff", fontSize: 18 }}>
+                      Saglabåt
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                height: 44,
+                borderRadius: 5,
+                borderWidth: 0.5,
+                borderColor: "gray",
+                marginTop: 12,
+                paddingHorizontal: 5,
+              }}
+              onPress={pickImage}
+            >
+              <IonIcon name="add" size={28} color="gray" />
+
+              <Text style={{ color: "gray", fontSize: 16, marginLeft: 0 }}>
+                Pievienot rasejumu
+              </Text>
+            </TouchableOpacity>
+          )}
         </BottomSheetScrollView>
       </BottomSheet>
     </View>
