@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Defecto",
+    "slug": "defecto",
+    "version": "1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dee77c68-fd89-458d-9ecf-38e4bbfa94fc"
+      }
+    },
+    "owner": "sussybob",
+    "android": {
+      "package": "com.defecto.app",
+      "versionCode": 1
+    },
+    "ios": {
+      "bundleIdentifier": "com.defecto.app",
+      "buildNumber": "1",
+      "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+      "photosPermission":	"Allow $(PRODUCT_NAME) to access your photos",
+      "infoPlist": {
+        "NSCameraUsageDescription": "We need access to your camera to capture photos for saving memorable moments in our app. Your photos will only be used for in-app features and will not be shared with any third parties."
+      }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to add building blueprints."
+        }
+      ]
+    ]
+  }
+}
