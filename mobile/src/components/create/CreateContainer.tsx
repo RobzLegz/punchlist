@@ -9,7 +9,7 @@ import {
   GestureResponderEvent,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { addNewProject } from "../../redux/slices/appSlice";
+import { addNewProject, updateProject } from "../../redux/slices/appSlice";
 import { useDispatch } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Plan, Point } from "../../types/project";
@@ -93,17 +93,27 @@ const HomeContainer = () => {
       return;
     }
 
-    dispatch(
-      addNewProject({
-        title: title,
-        blueprints: blueprints,
-      })
-    );
+    if (route.params?.id) {
+      dispatch(
+        updateProject({
+          id: route.params.id,
+          title: title,
+          blueprints: blueprints,
+        })
+      );
+    } else {
+      dispatch(
+        addNewProject({
+          title: title,
+          blueprints: blueprints,
+        })
+      );
+    }
 
     navigation.goBack();
   };
 
-  const [Sheetopen, setSheetOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   return (
     <View
@@ -242,7 +252,7 @@ const HomeContainer = () => {
         </View>
       </ScrollView>
 
-      {Sheetopen ? (
+      {sheetOpen ? (
         <Pressable
           style={{
             width: "100%",
@@ -491,27 +501,29 @@ const HomeContainer = () => {
         </BottomSheetScrollView>
       </BottomSheet>
 
-      <View
-        style={{
-          width: "100%",
-          padding: 15,
-        }}
-      >
-        <TouchableOpacity
+      {!sheetOpen ? (
+        <View
           style={{
             width: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "row",
-            height: 60,
-            backgroundColor: "#000",
-            borderRadius: 10,
+            padding: 15,
           }}
-          onPress={handleProjectSave}
         >
-          <Text style={{ color: "#fff", fontSize: 16 }}>Saglabåt</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            style={{
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+              height: 60,
+              backgroundColor: "#000",
+              borderRadius: 10,
+            }}
+            onPress={handleProjectSave}
+          >
+            <Text style={{ color: "#fff", fontSize: 16 }}>Saglabåt</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </View>
   );
 };

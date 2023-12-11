@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Project } from "../../types/project";
+import { RdxProject } from "../../types/redux.props";
 
 export interface RdxAction<T> {
   type: string;
@@ -25,17 +26,31 @@ export const appSlice: any = createSlice({
 
       return action.payload;
     },
-    addNewProject: (state, action: RdxAction<Project>) => {
-      if (state.projects) {
+    addNewProject: (state, action: RdxAction<RdxProject>) => {
+      if (state.projects && state.projects.length > 0) {
+        const id = state.projects.sort((a, b) => b.id - a.id)[0].id + 1;
+
         return {
           ...state,
-          projects: [...state.projects, action.payload],
+          projects: [...state.projects, { ...action.payload, id }],
         };
       }
 
       return {
         ...state,
-        projects: [action.payload],
+        projects: [{ ...action.payload, id: 1 }],
+      };
+    },
+    updateProject: (state, action: RdxAction<Project>) => {
+      if (!state.projects || state.projects.length === 0) {
+        return state;
+      }
+
+      return {
+        ...state,
+        projects: state.projects.map((p) =>
+          p.id === action.payload.id ? action.payload : p
+        ),
       };
     },
     deleteProject: (state, action: RdxAction<number>) => {
@@ -51,7 +66,7 @@ export const appSlice: any = createSlice({
   },
 });
 
-export const { addNewProject, loadState, deleteProject } = appSlice.actions;
+export const { addNewProject, loadState, deleteProject, updateProject } = appSlice.actions;
 
 export const selectApp = (state: any) => state.app;
 
