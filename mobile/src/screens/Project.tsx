@@ -1,13 +1,13 @@
 import React from "react";
-import CategoryContainer from "../components/home/CategoryContainer";
+import ProjectContainer from "../components/ProjectContainer";
 import ScreenModule from "../modules/ScreenModule";
 
-const Category = () => {
+const ProjectScreen = () => {
   return (
     <ScreenModule statusBgColor="#ffffff" barStyle="dark">
-      <CategoryContainer />
+      <ProjectContainer />
     </ScreenModule>
   );
 };
 
-export default Category;
+export default ProjectScreen;

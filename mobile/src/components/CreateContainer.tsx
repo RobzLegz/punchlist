@@ -9,15 +9,15 @@ import {
   GestureResponderEvent,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { addNewProject, updateProject } from "../../redux/slices/appSlice";
+import { addNewProject, updateProject } from "../redux/slices/appSlice";
 import { useDispatch } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Plan, Point } from "../../types/project";
+import { Plan, Point } from "../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import * as ImagePicker from "expo-image-picker";
-import { PIN_SIZE } from "../../constants";
+import { PIN_SIZE } from "../constants";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();

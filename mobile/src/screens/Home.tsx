@@ -1,5 +1,5 @@
 import React from "react";
-import HomeContainer from "../components/home/HomeContainer";
+import HomeContainer from "../components/HomeContainer";
 import ScreenModule from "../modules/ScreenModule";
 
 const Home = () => {

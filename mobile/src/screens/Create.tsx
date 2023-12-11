@@ -1,5 +1,5 @@
 import React from "react";
-import CreateContainer from "../components/create/CreateContainer";
+import CreateContainer from "../components/CreateContainer";
 import ScreenModule from "../modules/ScreenModule";
 
 const Create = () => {

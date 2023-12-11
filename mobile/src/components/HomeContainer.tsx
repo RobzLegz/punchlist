@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
-import { AppInfo, deleteProject, selectApp } from "../../redux/slices/appSlice";
+import { AppInfo, deleteProject, selectApp } from "../redux/slices/appSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -52,6 +52,9 @@ const HomeContainer = () => {
                         height: 44,
                         alignSelf: "stretch",
                       }}
+                      onPress={() =>
+                        navigation.navigate("Project", { ...project })
+                      }
                     >
                       <Text style={{ color: "#ffffff", fontSize: 16 }}>
                         Apskatit
