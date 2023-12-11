@@ -38,10 +38,20 @@ export const appSlice: any = createSlice({
         projects: [action.payload],
       };
     },
+    deleteProject: (state, action: RdxAction<number>) => {
+      if (state.projects) {
+        return {
+          ...state,
+          projects: state.projects.filter((_p, i) => i !== action.payload),
+        };
+      }
+
+      return state;
+    },
   },
 });
 
-export const { addNewProject, loadState } = appSlice.actions;
+export const { addNewProject, loadState, deleteProject } = appSlice.actions;
 
 export const selectApp = (state: any) => state.app;
 

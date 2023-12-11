@@ -11,7 +11,7 @@ import {
 import React, { useRef, useState } from "react";
 import { addNewProject } from "../../redux/slices/appSlice";
 import { useDispatch } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Plan, Point } from "../../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
@@ -22,11 +22,16 @@ import { PIN_SIZE } from "../../constants";
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
+  const route = useRoute<any>();
 
   const sheetRef = useRef<BottomSheet>(null);
 
-  const [title, setTitle] = useState("");
-  const [blueprints, setBlueprints] = useState<Plan[]>([]);
+  const [title, setTitle] = useState(
+    route.params?.title ? route.params.title : ""
+  );
+  const [blueprints, setBlueprints] = useState<Plan[]>(
+    route.params?.blueprints ? route.params.blueprints : []
+  );
 
   const [newBluePrint, setNewBluePrint] = useState<Plan>({
     title: "",
@@ -97,7 +102,6 @@ const HomeContainer = () => {
 
     navigation.goBack();
   };
-
 
   const [Sheetopen, setSheetOpen] = useState(false);
 

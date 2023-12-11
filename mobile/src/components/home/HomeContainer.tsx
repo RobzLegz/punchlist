@@ -1,12 +1,13 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
-import { AppInfo, selectApp } from "../../redux/slices/appSlice";
-import { useSelector } from "react-redux";
+import { AppInfo, deleteProject, selectApp } from "../../redux/slices/appSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
+  const dispatch = useDispatch();
 
   const appInfo: AppInfo = useSelector(selectApp);
 
@@ -35,7 +36,7 @@ const HomeContainer = () => {
                 <View
                   style={{
                     flexDirection: "row",
-                    marginTop: 16,
+                    marginTop: 12,
                     width: "100%",
                   }}
                 >
@@ -71,6 +72,9 @@ const HomeContainer = () => {
                       width: 90,
                       height: 44,
                     }}
+                    onPress={() =>
+                      navigation.navigate("Create", { ...project })
+                    }
                   >
                     <Text style={{ color: "#000", fontSize: 16 }}>Rediget</Text>
                   </TouchableOpacity>
@@ -84,6 +88,7 @@ const HomeContainer = () => {
                       borderRadius: 8,
                       height: 44,
                     }}
+                    onPress={() => dispatch(deleteProject(i))}
                   >
                     <Text style={{ color: "#ffffff", fontSize: 16 }}>
                       Dzest
