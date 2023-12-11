@@ -19,7 +19,7 @@ const HomeContainer = () => {
               <View
                 style={{
                   width: "100%",
-                  padding: 20,
+                  padding: 10,
                   marginBottom: 12,
                   borderWidth: 0.5,
                   borderRadius: 10,
@@ -27,7 +27,69 @@ const HomeContainer = () => {
                 }}
                 key={i}
               >
-                <Text style={{ fontSize: 18 }}>{project.title}</Text>
+                <Text style={{ fontSize: 20, color: "#000000" }}>
+                  {project.title} |{" "}
+                  {project.blueprints.flatMap((bl) => bl.points).length} defekti
+                </Text>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    marginTop: 16,
+                    width: "100%",
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    <TouchableOpacity
+                      style={{
+                        width: "100%",
+                        paddingHorizontal: 10,
+                        borderRadius: 8,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#000000",
+                        height: 44,
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Text style={{ color: "#ffffff", fontSize: 16 }}>
+                        Apskatit
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#fff",
+                      paddingHorizontal: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 8,
+                      borderWidth: 2,
+                      borderColor: "#000",
+                      marginHorizontal: 8,
+                      width: 90,
+                      height: 44,
+                    }}
+                  >
+                    <Text style={{ color: "#000", fontSize: 16 }}>Rediget</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "red",
+                      paddingHorizontal: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 8,
+                      height: 44,
+                    }}
+                  >
+                    <Text style={{ color: "#ffffff", fontSize: 16 }}>
+                      Dzest
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             ))}
           </ScrollView>
