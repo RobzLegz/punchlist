@@ -29,7 +29,17 @@ const HomeContainer = () => {
                 key={i}
               >
                 <Text style={{ fontSize: 20, color: "#000000" }}>
-                  {project.title} |{" "}
+                  {project.title}
+                </Text>
+
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: "red",
+                    marginTop: 4,
+                    textDecorationLine: "underline",
+                  }}
+                >
                   {project.blueprints.flatMap((bl) => bl.points).length} defekti
                 </Text>
 
