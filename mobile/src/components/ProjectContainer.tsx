@@ -1,15 +1,10 @@
-import {
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Text,
-  Image,
-} from "react-native";
-import React, {  useState } from "react";
+import { View, ScrollView, TouchableOpacity, Text, Image } from "react-native";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Plan, Point, Project } from "../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { PIN_SIZE } from "../constants";
 
 const HomeContainer = () => {
@@ -54,12 +49,12 @@ const HomeContainer = () => {
         </Text>
       </View>
 
-      <ScrollView style={{ padding: 12}}>
+      <ScrollView style={{ padding: 12 }} showsVerticalScrollIndicator={false}>
         {project.blueprints.map((plan: Plan, i: number) => (
           <BP {...plan} key={i} />
         ))}
 
-        <View style={{height: 80}} />
+        <View style={{ height: 80 }} />
       </ScrollView>
     </View>
   );
@@ -135,9 +130,16 @@ const BP: React.FC<Plan> = ({ ...props }) => {
             padding: 10,
             borderTopWidth: 0.5,
             borderTopColor: "gray",
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
           }}
         >
-          <Text style={{ fontSize: 18, color: "red" }}>! {activePoint.description}</Text>
+          <FontAwesome name="exclamation" size={20} color="red" />
+
+          <Text style={{ fontSize: 18, color: "red", marginLeft: 4 }}>
+            {activePoint.description}
+          </Text>
         </View>
       ) : null}
     </View>

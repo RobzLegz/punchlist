@@ -15,7 +15,10 @@ const HomeContainer = () => {
     <View style={{ width: "100%", height: "100%" }}>
       <View style={{ width: "100%", flex: 1 }}>
         {appInfo.projects.length > 0 ? (
-          <ScrollView style={{ padding: 20 }}>
+          <ScrollView
+            style={{ padding: 20 }}
+            showsVerticalScrollIndicator={false}
+          >
             {appInfo.projects.map((project, i) => (
               <View
                 style={{

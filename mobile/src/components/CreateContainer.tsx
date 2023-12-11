@@ -140,7 +140,10 @@ const HomeContainer = () => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{ flex: 1, width: "100%", padding: 20 }}>
+      <ScrollView
+        style={{ flex: 1, width: "100%", padding: 20 }}
+        showsVerticalScrollIndicator={false}
+      >
         <View
           style={{
             width: "100%",
@@ -277,7 +280,10 @@ const HomeContainer = () => {
         enablePanDownToClose
         style={{ zIndex: 20 }}
       >
-        <BottomSheetScrollView style={{ width: "100%", padding: 20 }}>
+        <BottomSheetScrollView
+          style={{ width: "100%", padding: 20 }}
+          showsVerticalScrollIndicator={false}
+        >
           <View
             style={{
               width: "100%",
