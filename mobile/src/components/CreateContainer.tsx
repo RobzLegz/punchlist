@@ -7,6 +7,7 @@ import {
   Pressable,
   Image,
   GestureResponderEvent,
+  StyleSheet,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { addNewProject, updateProject } from "../redux/slices/appSlice";
@@ -339,17 +340,9 @@ const HomeContainer = () => {
                   key={i}
                   disabled={newPin ? true : false}
                   style={{
-                    position: "absolute",
+                    ...pinStyle,
                     top: p.coords.y,
                     left: p.coords.x,
-                    width: PIN_SIZE,
-                    height: PIN_SIZE,
-                    backgroundColor: "red",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 8,
-                    borderWidth: 2,
-                    borderColor: "#000",
                     opacity: newPin ? 0.4 : 1,
                   }}
                   onPress={() => {
@@ -368,17 +361,9 @@ const HomeContainer = () => {
                 <>
                   <View
                     style={{
-                      position: "absolute",
+                      ...pinStyle,
                       top: newPin.coords.y,
                       left: newPin.coords.x,
-                      width: PIN_SIZE,
-                      height: PIN_SIZE,
-                      backgroundColor: "red",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: 8,
-                      borderWidth: 2,
-                      borderColor: "#000",
                     }}
                   >
                     <Text style={{ color: "white", fontSize: 28 }}>!</Text>
@@ -535,3 +520,19 @@ const HomeContainer = () => {
 };
 
 export default HomeContainer;
+
+const styles = StyleSheet.create({
+  pin: {
+    position: "absolute",
+    width: PIN_SIZE,
+    height: PIN_SIZE,
+    backgroundColor: "red",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#000",
+  },
+});
+
+export const pinStyle = styles.pin;
