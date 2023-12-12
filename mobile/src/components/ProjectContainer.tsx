@@ -1,15 +1,13 @@
 import { View, ScrollView, TouchableOpacity, Text, Image } from "react-native";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Plan, Point, Project } from "../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { PIN_SIZE } from "../constants";
+import { pinStyle } from "./CreateContainer";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
-  const dispatch = useDispatch();
   const route = useRoute<any>();
 
   const project: Project = route.params as Project;
@@ -97,17 +95,10 @@ const BP: React.FC<Plan> = ({ ...props }) => {
         {props.points.map((p, j) => (
           <TouchableOpacity
             style={{
-              position: "absolute",
+              ...pinStyle,
               top: p.coords.y,
               left: p.coords.x,
-              width: PIN_SIZE,
-              height: PIN_SIZE,
-              backgroundColor: "red",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 8,
-              borderWidth: 2,
-              borderColor: "#000",
+
               opacity:
                 activePoint &&
                 activePoint.coords.y !== p.coords.y &&
