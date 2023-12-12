@@ -336,15 +336,12 @@ const HomeContainer = () => {
               </TouchableOpacity>
 
               {newBluePrint.points.map((p, i) => (
-                <TouchableOpacity
+                <Pin
                   key={i}
                   disabled={newPin ? true : false}
-                  style={{
-                    ...pinStyle,
-                    top: p.coords.y,
-                    left: p.coords.x,
-                    opacity: newPin ? 0.4 : 1,
-                  }}
+                  opacity={newPin ? 0.4 : 1}
+                  x={p.coords.x}
+                  y={p.coords.y}
                   onPress={() => {
                     setNewPin(p);
                     setNewBluePrint({
@@ -352,22 +349,12 @@ const HomeContainer = () => {
                       points: newBluePrint.points.filter((_, j) => j !== i),
                     });
                   }}
-                >
-                  <Text style={{ color: "white", fontSize: 28 }}>!</Text>
-                </TouchableOpacity>
+                />
               ))}
 
               {newPin ? (
                 <>
-                  <View
-                    style={{
-                      ...pinStyle,
-                      top: newPin.coords.y,
-                      left: newPin.coords.x,
-                    }}
-                  >
-                    <Text style={{ color: "white", fontSize: 28 }}>!</Text>
-                  </View>
+                  <Pin x={newPin.coords.x} y={newPin.coords.y} />
 
                   <View style={{ width: "100%", marginTop: 12 }}>
                     <Text style={{ color: "gray" }}>Defekta apraksts</Text>
@@ -535,4 +522,25 @@ const styles = StyleSheet.create({
   },
 });
 
-export const pinStyle = styles.pin;
+export const Pin: React.FC<{
+  disabled?: boolean;
+  x: number;
+  y: number;
+  opacity?: 0.4 | 1;
+  onPress?: () => void;
+}> = ({ disabled = false, x, y, opacity = 1, onPress }) => {
+  return (
+    <TouchableOpacity
+      disabled={disabled}
+      style={{
+        ...styles.pin,
+        top: y,
+        left: x,
+        opacity,
+      }}
+      onPress={onPress}
+    >
+      <Text style={{ color: "white", fontSize: 28 }}>!</Text>
+    </TouchableOpacity>
+  );
+};

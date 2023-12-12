@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Plan, Point, Project } from "../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { pinStyle } from "./CreateContainer";
+import { Pin } from "./CreateContainer";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
@@ -93,24 +93,19 @@ const BP: React.FC<Plan> = ({ ...props }) => {
         />
 
         {props.points.map((p, j) => (
-          <TouchableOpacity
-            style={{
-              ...pinStyle,
-              top: p.coords.y,
-              left: p.coords.x,
-
-              opacity:
-                activePoint &&
-                activePoint.coords.y !== p.coords.y &&
-                activePoint.coords.x !== p.coords.x
-                  ? 0.6
-                  : 1,
-            }}
+          <Pin
             key={j}
+            opacity={
+              activePoint &&
+              activePoint.coords.y !== p.coords.y &&
+              activePoint.coords.x !== p.coords.x
+                ? 0.4
+                : 1
+            }
+            x={p.coords.x}
+            y={p.coords.y}
             onPress={() => setActivePoint(p)}
-          >
-            <Text style={{ color: "white", fontSize: 28 }}>!</Text>
-          </TouchableOpacity>
+          />
         ))}
       </View>
 
