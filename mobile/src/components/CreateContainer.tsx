@@ -6,7 +6,6 @@ import {
   TextInput,
   Pressable,
   Image,
-  GestureResponderEvent,
   StyleSheet,
 } from "react-native";
 import React, { useRef, useState } from "react";
@@ -19,8 +18,9 @@ import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import * as ImagePicker from "expo-image-picker";
 import { PIN_SIZE } from "../constants";
+import ZoomContainer from "./ZoomContainer";
 
-const HomeContainer = () => {
+const CreateContainer = () => {
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
   const route = useRoute<any>();
@@ -33,6 +33,8 @@ const HomeContainer = () => {
   const [blueprints, setBlueprints] = useState<Plan[]>(
     route.params?.blueprints ? route.params.blueprints : []
   );
+
+  const [ppOpen, setPpOpen] = useState(false);
 
   const [newBluePrint, setNewBluePrint] = useState<Plan>({
     title: "",
@@ -53,31 +55,6 @@ const HomeContainer = () => {
       sheetRef.current?.snapToIndex(1);
       setNewBluePrint({ ...newBluePrint, image: result.assets[0].uri });
     }
-  };
-
-  const addNewPin = (event: GestureResponderEvent) => {
-    setNewPin({
-      geo: null,
-      coords: {
-        x: event.nativeEvent.locationX - PIN_SIZE / 2,
-        y: event.nativeEvent.locationY - PIN_SIZE / 2,
-      },
-      description: "",
-      irl_image: null,
-    });
-  };
-
-  const handleSavePin = () => {
-    if (!newPin) {
-      return;
-    }
-
-    setNewBluePrint({
-      ...newBluePrint,
-      points: [...newBluePrint.points, newPin],
-    });
-
-    setNewPin(null);
   };
 
   const handleSaveBlueprint = () => {
@@ -115,6 +92,22 @@ const HomeContainer = () => {
   };
 
   const [sheetOpen, setSheetOpen] = useState(false);
+
+  if (ppOpen) {
+    return (
+      <ZoomContainer
+        newBluePrint={newBluePrint}
+        setNewBluePrint={setNewBluePrint}
+        close={() => {
+          setPpOpen(false);
+          setTimeout(() => {
+            setSheetOpen(true);
+            sheetRef.current?.expand();
+          }, 200);
+        }}
+      />
+    );
+  }
 
   return (
     <View
@@ -322,136 +315,44 @@ const HomeContainer = () => {
                 position: "relative",
                 alignItems: "center",
                 justifyContent: "flex-start",
+                flex: 1,
               }}
             >
               <TouchableOpacity
-                style={{ width: "100%" }}
-                activeOpacity={1}
-                onPress={(e) => addNewPin(e)}
+                style={{ width: "100%", flex: 1, position: "relative" }}
+                onPress={() => setPpOpen(true)}
               >
                 <Image
                   source={{ uri: newBluePrint.image }}
                   style={{ width: "100%", height: 360, resizeMode: "contain" }}
                 />
+
+                {newBluePrint.points.map((p, i) => (
+                  <Pin
+                    key={i}
+                    disabled
+                    opacity={1}
+                    x={p.coords.x}
+                    y={p.coords.y}
+                  />
+                ))}
               </TouchableOpacity>
 
-              {newBluePrint.points.map((p, i) => (
-                <Pin
-                  key={i}
-                  disabled={newPin ? true : false}
-                  opacity={newPin ? 0.4 : 1}
-                  x={p.coords.x}
-                  y={p.coords.y}
-                  onPress={() => {
-                    setNewPin(p);
-                    setNewBluePrint({
-                      ...newBluePrint,
-                      points: newBluePrint.points.filter((_, j) => j !== i),
-                    });
-                  }}
-                />
-              ))}
-
-              {newPin ? (
-                <>
-                  <Pin x={newPin.coords.x} y={newPin.coords.y} />
-
-                  <View style={{ width: "100%", marginTop: 12 }}>
-                    <Text style={{ color: "gray" }}>Defekta apraksts</Text>
-
-                    <TextInput
-                      multiline
-                      numberOfLines={3}
-                      onChangeText={(text) =>
-                        setNewPin({ ...newPin, description: text })
-                      }
-                      value={newPin.description}
-                      placeholder="Apraksts"
-                      style={{
-                        width: "100%",
-                        borderColor: "gray",
-                        borderWidth: 0.5,
-                        marginTop: 8,
-                        borderRadius: 5,
-                        padding: 10,
-                        fontSize: 16,
-                        color: "gray",
-                        textAlignVertical: "top",
-                      }}
-                    />
-
-                    <View style={{ width: "100%", flexDirection: "row" }}>
-                      <TouchableOpacity
-                        style={{
-                          flex: 1,
-                          backgroundColor: "#000",
-                          height: 50,
-                          borderRadius: 5,
-                          alignItems: "center",
-                          justifyContent: "center",
-                          marginTop: 12,
-                          marginRight: 4,
-                        }}
-                        onPress={handleSavePin}
-                      >
-                        <Text style={{ color: "#fff", fontSize: 18 }}>
-                          Saglabåt
-                        </Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "#fff",
-                          width: 100,
-                          height: 50,
-                          borderRadius: 5,
-                          alignItems: "center",
-                          justifyContent: "center",
-                          marginTop: 12,
-                          marginLeft: 4,
-                          borderColor: "#000",
-                          borderWidth: 2,
-                        }}
-                        onPress={() => setNewPin(null)}
-                      >
-                        <Text style={{ color: "#000", fontSize: 18 }}>
-                          Dzest
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </>
-              ) : (
-                <>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontSize: 18,
-                      color: "gray",
-                      marginTop: 12,
-                    }}
-                  >
-                    Pievienojiet defektus spiezot uz plana bildes.
-                  </Text>
-
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#000",
-                      width: "100%",
-                      height: 50,
-                      borderRadius: 5,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 20,
-                    }}
-                    onPress={handleSaveBlueprint}
-                  >
-                    <Text style={{ color: "#fff", fontSize: 18 }}>
-                      Saglabåt
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
+              <TouchableOpacity
+                style={{
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  height: 48,
+                  backgroundColor: "#000",
+                  borderRadius: 8,
+                  marginTop: 12,
+                }}
+                onPress={handleSaveBlueprint}
+              >
+                <Text style={{ color: "#fff", fontSize: 16 }}>Saglabat</Text>
+              </TouchableOpacity>
             </View>
           ) : (
             <TouchableOpacity
@@ -506,7 +407,7 @@ const HomeContainer = () => {
   );
 };
 
-export default HomeContainer;
+export default CreateContainer;
 
 const styles = StyleSheet.create({
   pin: {
