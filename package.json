@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "m": "cd mobile && yarn dev"
+    }
+}
