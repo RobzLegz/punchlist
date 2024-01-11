@@ -1,12 +1,12 @@
 import { View, ScrollView, TouchableOpacity, Text, Image } from "react-native";
-import React, { useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Plan, Project } from "../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
-import { Pin } from "./CreateContainer";
+import { updateProject } from "../redux/slices/appSlice";
+import { Plan, Project } from "../types/project";
 import ZoomContainer from "./ZoomContainer";
 import { useDispatch } from "react-redux";
-import { updateProject } from "../redux/slices/appSlice";
+import { Pin } from "./CreateContainer";
+import React, { useState } from "react";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
