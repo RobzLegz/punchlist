@@ -13,7 +13,7 @@ const HomeContainer = () => {
   const route = useRoute<any>();
   const dispatch = useDispatch();
 
-  let project: Project = route.params as Project;
+  const [project, setProject] = useState<Project>(route.params as Project)
 
   const [currentBluePrint, setCurrentBlueprint] = useState<
     (Plan & { index: number }) | null
@@ -30,13 +30,13 @@ const HomeContainer = () => {
         ...project.blueprints.slice(0, currentBluePrint.index - 1),
         currentBluePrint,
         ...project.blueprints.slice(
-          currentBluePrint.index,
+          currentBluePrint.index + 1,
           project.blueprints.length
         ),
       ],
     };
 
-    project = newProject;
+    setProject(newProject);
 
     dispatch(updateProject(newProject));
 
