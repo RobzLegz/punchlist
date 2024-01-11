@@ -17,8 +17,17 @@ const { width, height } = Dimensions.get("window");
 const Zoomer: any = ImageZoom;
 
 const ZoomContainer: React.FC<{
-  newBluePrint: Plan;
-  setNewBluePrint: React.Dispatch<React.SetStateAction<Plan>>;
+  newBluePrint: Plan & {
+    index: number;
+  };
+  setNewBluePrint: React.Dispatch<
+    React.SetStateAction<
+      | (Plan & {
+          index: number;
+        })
+      | null
+    >
+  >;
   close?: () => void;
 }> = ({ newBluePrint, setNewBluePrint, close }) => {
   const [newPin, setNewPin] = useState<Point | null>(null);

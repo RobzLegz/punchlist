@@ -1,25 +1,47 @@
-import {
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Text,
-  Image,
-} from "react-native";
+import { View, ScrollView, TouchableOpacity, Text, Image } from "react-native";
 import React, { useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Plan, Project } from "../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Pin } from "./CreateContainer";
-import ZoomView from "./ZoomView";
+import ZoomContainer from "./ZoomContainer";
+import { useDispatch } from "react-redux";
+import { updateProject } from "../redux/slices/appSlice";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
+  const dispatch = useDispatch();
 
-  const project: Project = route.params as Project;
+  let project: Project = route.params as Project;
 
-  const [currentBluePrint, setCurrentBlueprint] = useState<Plan | null>(null);
+  const [currentBluePrint, setCurrentBlueprint] = useState<
+    (Plan & { index: number }) | null
+  >(null);
+
+  const handleSaveProject = () => {
+    if (!currentBluePrint) {
+      return;
+    }
+
+    const newProject = {
+      ...project,
+      blueprints: [
+        ...project.blueprints.slice(0, currentBluePrint.index - 1),
+        currentBluePrint,
+        ...project.blueprints.slice(
+          currentBluePrint.index,
+          project.blueprints.length
+        ),
+      ],
+    };
+
+    project = newProject;
+
+    dispatch(updateProject(newProject));
+
+    setCurrentBlueprint(null);
+  };
 
   if (!project) {
     return null;
@@ -27,9 +49,10 @@ const HomeContainer = () => {
 
   if (currentBluePrint) {
     return (
-      <ZoomView
-        bluePrint={currentBluePrint}
-        close={() => setCurrentBlueprint(null)}
+      <ZoomContainer
+        newBluePrint={currentBluePrint}
+        setNewBluePrint={setCurrentBlueprint}
+        close={handleSaveProject}
       />
     );
   }
@@ -67,7 +90,13 @@ const HomeContainer = () => {
 
       <ScrollView style={{ padding: 12 }} showsVerticalScrollIndicator={false}>
         {project.blueprints.map((plan: Plan, i: number) => (
-          <BP {...plan} setCurrentBlueprint={setCurrentBlueprint} key={i} />
+          <BP
+            {...plan}
+            onPress={() => {
+              setCurrentBlueprint({ ...plan, index: i });
+            }}
+            key={i}
+          />
         ))}
 
         <View style={{ height: 80 }} />
@@ -80,9 +109,9 @@ export default HomeContainer;
 
 const BP: React.FC<
   Plan & {
-    setCurrentBlueprint: React.Dispatch<React.SetStateAction<Plan | null>>;
+    onPress?: () => void;
   }
-> = ({ setCurrentBlueprint, ...props }) => {
+> = ({ onPress, ...props }) => {
   return (
     <TouchableOpacity
       style={{
@@ -95,7 +124,7 @@ const BP: React.FC<
         marginBottom: 12,
       }}
       activeOpacity={1}
-      onPress={() => setCurrentBlueprint(props)}
+      onPress={onPress}
     >
       <View
         style={{
