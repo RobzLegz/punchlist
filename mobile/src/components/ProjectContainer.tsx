@@ -1,10 +1,17 @@
-import { View, ScrollView, TouchableOpacity, Text, Image } from "react-native";
+import {
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Text,
+  Image,
+} from "react-native";
 import React, { useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Plan, Point, Project } from "../types/project";
+import { Plan, Project } from "../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Pin } from "./CreateContainer";
+import ZoomView from "./ZoomView";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
@@ -12,8 +19,19 @@ const HomeContainer = () => {
 
   const project: Project = route.params as Project;
 
+  const [currentBluePrint, setCurrentBlueprint] = useState<Plan | null>(null);
+
   if (!project) {
     return null;
+  }
+
+  if (currentBluePrint) {
+    return (
+      <ZoomView
+        bluePrint={currentBluePrint}
+        close={() => setCurrentBlueprint(null)}
+      />
+    );
   }
 
   return (
@@ -49,7 +67,7 @@ const HomeContainer = () => {
 
       <ScrollView style={{ padding: 12 }} showsVerticalScrollIndicator={false}>
         {project.blueprints.map((plan: Plan, i: number) => (
-          <BP {...plan} key={i} />
+          <BP {...plan} setCurrentBlueprint={setCurrentBlueprint} key={i} />
         ))}
 
         <View style={{ height: 80 }} />
@@ -60,20 +78,24 @@ const HomeContainer = () => {
 
 export default HomeContainer;
 
-const BP: React.FC<Plan> = ({ ...props }) => {
-  const [activePoint, setActivePoint] = useState<Point | null>(null);
-
+const BP: React.FC<
+  Plan & {
+    setCurrentBlueprint: React.Dispatch<React.SetStateAction<Plan | null>>;
+  }
+> = ({ setCurrentBlueprint, ...props }) => {
   return (
-    <View
+    <TouchableOpacity
       style={{
         width: "100%",
         height: "auto",
         position: "relative",
-        borderWidth: 0.5,
         borderColor: "gray",
+        borderWidth: 0.5,
         borderRadius: 10,
         marginBottom: 12,
       }}
+      activeOpacity={1}
+      onPress={() => setCurrentBlueprint(props)}
     >
       <View
         style={{
@@ -93,41 +115,35 @@ const BP: React.FC<Plan> = ({ ...props }) => {
         />
 
         {props.points.map((p, j) => (
-          <Pin
-            key={j}
-            opacity={
-              activePoint &&
-              activePoint.coords.y !== p.coords.y &&
-              activePoint.coords.x !== p.coords.x
-                ? 0.4
-                : 1
-            }
-            x={p.coords.x}
-            y={p.coords.y}
-            onPress={() => setActivePoint(p)}
-          />
+          <Pin key={j} disabled opacity={1} x={p.coords.x} y={p.coords.y} />
         ))}
       </View>
 
-      {activePoint ? (
+      <View
+        style={{
+          width: "100%",
+          padding: 10,
+          borderTopWidth: 0.5,
+          borderTopColor: "gray",
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          alignItems: "center",
+        }}
+      >
         <View
           style={{
             width: "100%",
-            padding: 10,
-            borderTopWidth: 0.5,
-            borderTopColor: "gray",
-            flexDirection: "row",
-            justifyContent: "flex-start",
+            height: 50,
             alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+            backgroundColor: "#000",
+            borderRadius: 4,
           }}
         >
-          <FontAwesome name="exclamation" size={20} color="red" />
-
-          <Text style={{ fontSize: 18, color: "red", marginLeft: 4 }}>
-            {activePoint.description}
-          </Text>
+          <Text style={{ color: "#fff" }}>Apskatit</Text>
         </View>
-      ) : null}
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
