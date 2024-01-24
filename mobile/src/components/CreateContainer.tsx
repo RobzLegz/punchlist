@@ -9,7 +9,11 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { addNewProject, updateProject } from "../redux/slices/appSlice";
+import {
+  addNewProject,
+  updateProject,
+  deleteProject,
+} from "../redux/slices/appSlice";
 import { useDispatch } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Plan, Point } from "../types/project";
@@ -125,13 +129,30 @@ const CreateContainer = () => {
           height: 48,
           borderBottomWidth: 0.5,
           borderBottomColor: "gray",
-          justifyContent: "center",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          flexDirection: "row",
           paddingHorizontal: 10,
         }}
       >
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <IonIcon name="arrow-back" size={28} color="gray" />
         </TouchableOpacity>
+
+        <Text style={{ fontSize: 18 }}>{title}</Text>
+
+        <View style={{ flex: 1, alignItems: "flex-end" }}>
+          <TouchableOpacity
+            onPress={() => {
+              if (route.params.id) {
+                dispatch(deleteProject(route.params.id));
+              }
+              navigation.goBack();
+            }}
+          >
+            <IonIcon name="trash" size={24} color="red" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView
@@ -260,6 +281,7 @@ const CreateContainer = () => {
             backgroundColor: "rgba(0, 0, 0, 0.3)",
           }}
           onPress={() => {
+            handleSaveBlueprint();
             setSheetOpen(false);
             sheetRef.current?.close();
           }}
@@ -271,7 +293,7 @@ const CreateContainer = () => {
         snapPoints={["40%", "80%"]}
         ref={sheetRef}
         onClose={() => setSheetOpen(false)}
-        enablePanDownToClose
+        enablePanDownToClose={false}
         style={{ zIndex: 20 }}
       >
         <BottomSheetScrollView

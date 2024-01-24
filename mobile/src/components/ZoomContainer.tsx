@@ -99,16 +99,25 @@ const ZoomContainer: React.FC<{
             {newBluePrint.points.map((p, i) => (
               <Pin
                 key={i}
-                disabled={newPin ? true : false}
                 opacity={newPin ? 0.4 : 1}
                 x={p.coords.x}
                 y={p.coords.y}
                 onPress={() => {
-                  setNewPin(p);
-                  setNewBluePrint({
+                  let newBp = newBluePrint;
+
+                  if (newPin) {
+                    newBp = {
+                      ...newBluePrint,
+                      points: [...newBluePrint.points, newPin],
+                    };
+                  }
+
+                  newBp = {
                     ...newBluePrint,
                     points: newBluePrint.points.filter((_, j) => j !== i),
-                  });
+                  };
+                  setNewBluePrint(newBp);
+                  setNewPin(p);
                 }}
               />
             ))}
