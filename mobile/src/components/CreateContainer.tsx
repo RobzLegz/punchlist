@@ -60,10 +60,10 @@ const CreateContainer = () => {
   };
 
   const handleSaveBlueprint = () => {
-    if (!newBluePrint.image && !newBluePrint.points && !newBluePrint.title) {
+    if (!newBluePrint.image && !newBluePrint.points?.length && !newBluePrint.title) {
       return;
     }
-    
+
     setBlueprints([...blueprints, newBluePrint]);
 
     setNewBluePrint({ title: "", image: "", points: [] });
@@ -149,7 +149,7 @@ const CreateContainer = () => {
         <View style={{ flex: 1, alignItems: "flex-end" }}>
           <TouchableOpacity
             onPress={() => {
-              if (route.params.id) {
+              if (route.params?.id) {
                 dispatch(deleteProject(route.params.id));
               }
               navigation.goBack();
