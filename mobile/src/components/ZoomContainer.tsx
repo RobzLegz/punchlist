@@ -24,6 +24,20 @@ const ZoomContainer: React.FC<{
   const [newPin, setNewPin] = useState<Point | null>(null);
 
   const handleClick = (e: any) => {
+    if (newPin) {
+      setNewPin({
+        geo: newPin.geo,
+        coords: {
+          x: e.locationX - PIN_SIZE / 2,
+          y: e.locationY - PIN_SIZE / 2,
+        },
+        description: newPin.description,
+        irl_image: newPin.irl_image,
+      });
+
+      return;
+    }
+
     setNewPin({
       geo: null,
       coords: {
@@ -107,14 +121,14 @@ const ZoomContainer: React.FC<{
 
                   if (newPin) {
                     newBp = {
-                      ...newBluePrint,
-                      points: [...newBluePrint.points, newPin],
+                      ...newBp,
+                      points: [...newBp.points, newPin],
                     };
                   }
 
                   newBp = {
-                    ...newBluePrint,
-                    points: newBluePrint.points.filter((_, j) => j !== i),
+                    ...newBp,
+                    points: newBp.points.filter((_, j) => j !== i),
                   };
                   setNewBluePrint(newBp);
                   setNewPin(p);

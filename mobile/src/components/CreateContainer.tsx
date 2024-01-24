@@ -46,8 +46,6 @@ const CreateContainer = () => {
     points: [],
   });
 
-  const [newPin, setNewPin] = useState<Point | null>(null);
-
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -62,6 +60,10 @@ const CreateContainer = () => {
   };
 
   const handleSaveBlueprint = () => {
+    if (!newBluePrint.image && !newBluePrint.points && !newBluePrint.title) {
+      return;
+    }
+    
     setBlueprints([...blueprints, newBluePrint]);
 
     setNewBluePrint({ title: "", image: "", points: [] });
@@ -104,10 +106,13 @@ const CreateContainer = () => {
         setNewBluePrint={setNewBluePrint}
         close={() => {
           setPpOpen(false);
-          setTimeout(() => {
-            setSheetOpen(true);
-            sheetRef.current?.expand();
-          }, 200);
+          setSheetOpen(false);
+          setBlueprints([...blueprints, newBluePrint]);
+          setNewBluePrint({
+            title: "",
+            image: "",
+            points: [],
+          });
         }}
       />
     );
