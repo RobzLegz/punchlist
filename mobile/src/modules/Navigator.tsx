@@ -9,10 +9,8 @@ import {
 } from "@expo-google-fonts/roboto";
 import * as SplashScreen from "expo-splash-screen";
 import loadStateFromMMKV from "../middlewares/mmkvLoader";
-import { useDispatch, useSelector } from "react-redux";
-import { AppInfo, selectApp } from "../redux/slices/appSlice";
+import { useDispatch } from "react-redux";
 import CreateScreen from "../screens/Create";
-import ProjectScreen from "../screens/Project";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,8 +18,6 @@ const Stack = createStackNavigator();
 
 const Navigator = () => {
   const dispatch = useDispatch();
-
-  const appInfo: AppInfo = useSelector(selectApp);
 
   const splashScreenHidden = useRef(false);
   const stateLoaded = useRef(false);
@@ -62,12 +58,6 @@ const Navigator = () => {
       <Stack.Screen
         name="Create"
         component={CreateScreen}
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name="Project"
-        component={ProjectScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
