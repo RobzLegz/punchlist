@@ -16,7 +16,7 @@ import {
 } from "../redux/slices/appSlice";
 import { useDispatch } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Plan, Point } from "../types/project";
+import { Plan } from "../types/project";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -60,7 +60,11 @@ const CreateContainer = () => {
   };
 
   const handleSaveBlueprint = () => {
-    if (!newBluePrint.image && !newBluePrint.points?.length && !newBluePrint.title) {
+    if (
+      !newBluePrint.image &&
+      !newBluePrint.points?.length &&
+      !newBluePrint.title
+    ) {
       return;
     }
 

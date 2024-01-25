@@ -11,6 +11,9 @@ import ImageZoom from "react-native-image-pan-zoom";
 import { Plan, Point } from "../types/project";
 import { PIN_SIZE } from "../constants";
 import { Pin } from "./CreateContainer";
+import Entypo from "react-native-vector-icons/Entypo";
+import CameraScreenContainer from "./CameraScreenContainer";
+import { Camera } from "expo-camera";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,6 +25,7 @@ const ZoomContainer: React.FC<{
   close?: () => void;
 }> = ({ newBluePrint, setNewBluePrint, close }) => {
   const [newPin, setNewPin] = useState<Point | null>(null);
+  const [addImage, setAddImage] = useState<boolean>(false);
 
   const handleClick = (e: any) => {
     if (newPin) {
@@ -47,6 +51,8 @@ const ZoomContainer: React.FC<{
       description: "",
       irl_image: null,
     });
+
+    setAddImage(false);
   };
 
   const handleSavePin = () => {
@@ -60,7 +66,26 @@ const ZoomContainer: React.FC<{
     });
 
     setNewPin(null);
+
+    setAddImage(false);
   };
+
+  if (addImage && newPin) {
+    return (
+      <CameraScreenContainer
+        setImage={(img) => {
+          if (newPin) {
+            setNewPin({
+              ...newPin,
+              irl_image: img,
+            });
+          }
+        }}
+        image={newPin.irl_image}
+        close={() => setAddImage(false)}
+      />
+    );
+  }
 
   return (
     <View
@@ -189,12 +214,67 @@ const ZoomContainer: React.FC<{
                 justifyContent: "center",
                 marginTop: 12,
                 marginLeft: 4,
-                borderColor: "#000",
+                borderColor: "red",
                 borderWidth: 2,
               }}
               onPress={() => setNewPin(null)}
             >
-              <Text style={{ color: "#000", fontSize: 18 }}>Dzest</Text>
+              <Text style={{ color: "red", fontSize: 18 }}>Dzest</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                width: 100,
+                height: 50,
+                borderRadius: 5,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 12,
+                marginLeft: 4,
+                borderColor: "#000",
+                borderWidth: 2,
+                position: "relative",
+              }}
+              onPress={async () => {
+                const cameraStatus =
+                  await Camera.requestCameraPermissionsAsync();
+
+                if (cameraStatus.status === "granted") {
+                  setAddImage(true);
+                }
+              }}
+            >
+              {newPin.irl_image ? (
+                <>
+                  <Image
+                    source={{ uri: newPin.irl_image }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                    }}
+                  />
+
+                  <View
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      zIndex: 5,
+                      backgroundColor: "rgba(0, 0, 0, 0.4)"
+                    }}
+                  >
+                    <Entypo name="camera" size={20} color="#fff" />
+                  </View>
+                </>
+              ) : (
+                <Entypo name="camera" size={20} color="#000" />
+              )}
             </TouchableOpacity>
           </View>
         </View>
