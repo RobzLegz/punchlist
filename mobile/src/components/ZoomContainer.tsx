@@ -201,7 +201,7 @@ const ZoomContainer: React.FC<{
               }}
               onPress={handleSavePin}
             >
-              <Text style={{ color: "#fff", fontSize: 18 }}>Saglabåt</Text>
+              <Text style={{ color: "#fff", fontSize: 18 }}>Saglabāt</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -292,7 +292,7 @@ const ZoomContainer: React.FC<{
             }}
             onPress={() => close && close()}
           >
-            <Text style={{ color: "#fff", fontSize: 16 }}>Saglabåt</Text>
+            <Text style={{ color: "#fff", fontSize: 16 }}>Saglabāt</Text>
           </TouchableOpacity>
         </View>
       )}

@@ -271,7 +271,7 @@ const CreateContainer = () => {
                 }}
               >
                 <Text style={{ color: "gray", fontSize: 14 }}>
-                  Pagaidåm nav neviena blueprinta
+                  Pagaidām nav neviena blueprinta
                 </Text>
               </View>
             )}
@@ -382,7 +382,7 @@ const CreateContainer = () => {
                 }}
                 onPress={handleSaveBlueprint}
               >
-                <Text style={{ color: "#fff", fontSize: 16 }}>Saglabat</Text>
+                <Text style={{ color: "#fff", fontSize: 16 }}>Saglabāt</Text>
               </TouchableOpacity>
             </View>
           ) : (
@@ -404,7 +404,7 @@ const CreateContainer = () => {
               <IonIcon name="add" size={28} color="gray" />
 
               <Text style={{ color: "gray", fontSize: 16, marginLeft: 0 }}>
-                Pievienot rasejumu
+                Pievienot rasējumu
               </Text>
             </TouchableOpacity>
           )}
@@ -430,7 +430,7 @@ const CreateContainer = () => {
             }}
             onPress={handleProjectSave}
           >
-            <Text style={{ color: "#fff", fontSize: 16 }}>Saglabåt</Text>
+            <Text style={{ color: "#fff", fontSize: 16 }}>Saglabāt</Text>
           </TouchableOpacity>
         </View>
       ) : null}
