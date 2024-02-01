@@ -10,6 +10,7 @@ import {
 import { Camera } from "expo-camera";
 import { MaterialIcons, Octicons, Entypo } from "@expo/vector-icons";
 import { manipulateAsync, FlipType } from "expo-image-manipulator";
+import IonIcon from "react-native-vector-icons/Ionicons";
 
 export const { height, width } = Dimensions.get("window");
 
@@ -27,38 +28,15 @@ const CameraScreenContainer: React.FC<{
   if (image) {
     return (
       <View style={styles.container}>
-        <TopControls close={() => setImage(null)} />
+        <TopControls
+          delete={() => setImage(null)}
+          close={() => close && close()}
+        />
 
         <Image
           style={{ width: "100%", height: "100%", resizeMode: "cover" }}
           source={{ uri: image }}
         />
-
-        <View
-          style={{
-            width: "100%",
-            padding: 15,
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            zIndex: 10,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-              height: 60,
-              backgroundColor: "#000",
-              borderRadius: 10,
-            }}
-            onPress={close}
-          >
-            <Text style={{ color: "#fff", fontSize: 16 }}>Saglabāt</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     );
   }
@@ -144,13 +122,28 @@ const styles = StyleSheet.create({
 export const cameraContainerStyle = styles.container;
 
 export const TopControls: React.FC<{
+  delete?: () => void;
   close: () => void;
-}> = ({ close }) => {
+}> = ({ close, delete: del }) => {
   return (
     <View style={styles.topControls}>
-      <TouchableOpacity onPress={close}>
-        <MaterialIcons name="close" size={35} color="#fff" />
-      </TouchableOpacity>
+      {del ? (
+        <>
+          <TouchableOpacity onPress={close}>
+            <IonIcon name="arrow-back" size={35} color="#fff" />
+          </TouchableOpacity>
+
+          <View style={{ flex: 1 }} />
+
+          <TouchableOpacity onPress={del}>
+            <IonIcon name="trash" size={35} color="#fff" />
+          </TouchableOpacity>
+        </>
+      ) : (
+        <TouchableOpacity onPress={close}>
+          <MaterialIcons name="close" size={35} color="#fff" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

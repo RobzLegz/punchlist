@@ -144,7 +144,7 @@ const CreateContainer = () => {
           paddingHorizontal: 10,
         }}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={handleProjectSave}>
           <IonIcon name="arrow-back" size={28} color="gray" />
         </TouchableOpacity>
 
@@ -410,30 +410,6 @@ const CreateContainer = () => {
           )}
         </BottomSheetScrollView>
       </BottomSheet>
-
-      {!sheetOpen ? (
-        <View
-          style={{
-            width: "100%",
-            padding: 15,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-              height: 60,
-              backgroundColor: "#000",
-              borderRadius: 10,
-            }}
-            onPress={handleProjectSave}
-          >
-            <Text style={{ color: "#fff", fontSize: 16 }}>Saglabāt</Text>
-          </TouchableOpacity>
-        </View>
-      ) : null}
     </View>
   );
 };

@@ -12,6 +12,7 @@ import { Plan, Point } from "../types/project";
 import { PIN_SIZE } from "../constants";
 import { Pin } from "./CreateContainer";
 import Entypo from "react-native-vector-icons/Entypo";
+import IonIcon from "react-native-vector-icons/Ionicons";
 import CameraScreenContainer from "./CameraScreenContainer";
 import { Camera } from "expo-camera";
 
@@ -98,6 +99,23 @@ const ZoomContainer: React.FC<{
         height: "100%",
       }}
     >
+      <View
+        style={{
+          width: "100%",
+          height: 48,
+          borderBottomWidth: 0.5,
+          borderBottomColor: "gray",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          flexDirection: "row",
+          paddingHorizontal: 10,
+        }}
+      >
+        <TouchableOpacity onPress={() => close && close()}>
+          <IonIcon name="arrow-back" size={28} color="gray" />
+        </TouchableOpacity>
+      </View>
+
       <View style={{ width: "100%", flex: 1, position: "relative" }}>
         <Zoomer
           style={{
@@ -197,7 +215,6 @@ const ZoomContainer: React.FC<{
                 alignItems: "center",
                 justifyContent: "center",
                 marginTop: 12,
-                marginRight: 4,
               }}
               onPress={handleSavePin}
             >
@@ -213,25 +230,7 @@ const ZoomContainer: React.FC<{
                 alignItems: "center",
                 justifyContent: "center",
                 marginTop: 12,
-                marginLeft: 4,
-                borderColor: "red",
-                borderWidth: 2,
-              }}
-              onPress={() => setNewPin(null)}
-            >
-              <Text style={{ color: "red", fontSize: 18 }}>Dzest</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#fff",
-                width: 100,
-                height: 50,
-                borderRadius: 5,
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: 12,
-                marginLeft: 4,
+                marginHorizontal: 6,
                 borderColor: "#000",
                 borderWidth: 2,
                 position: "relative",
@@ -266,7 +265,7 @@ const ZoomContainer: React.FC<{
                       alignItems: "center",
                       justifyContent: "center",
                       zIndex: 5,
-                      backgroundColor: "rgba(0, 0, 0, 0.4)"
+                      backgroundColor: "rgba(0, 0, 0, 0.4)",
                     }}
                   >
                     <Entypo name="camera" size={20} color="#fff" />
@@ -276,26 +275,26 @@ const ZoomContainer: React.FC<{
                 <Entypo name="camera" size={20} color="#000" />
               )}
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#fff",
+                width: 100,
+                height: 50,
+                borderRadius: 5,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 12,
+                borderColor: "red",
+                borderWidth: 2,
+              }}
+              onPress={() => setNewPin(null)}
+            >
+              <IonIcon name="trash" size={24} color="red" />
+            </TouchableOpacity>
           </View>
         </View>
-      ) : (
-        <View style={{ padding: 20 }}>
-          <TouchableOpacity
-            style={{
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-              height: 60,
-              backgroundColor: "#000",
-              borderRadius: 10,
-            }}
-            onPress={() => close && close()}
-          >
-            <Text style={{ color: "#fff", fontSize: 16 }}>Saglabāt</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      ) : null}
     </View>
   );
 };
