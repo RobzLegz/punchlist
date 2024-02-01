@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   TextInput,
+  ScrollView,
 } from "react-native";
 import ImageZoom from "react-native-image-pan-zoom";
 import { Plan, Point } from "../types/project";
@@ -183,7 +184,14 @@ const ZoomContainer: React.FC<{
       </View>
 
       {newPin ? (
-        <View style={{ width: "100%", backgroundColor: "white", padding: 20 }}>
+        <ScrollView
+          style={{
+            width: "100%",
+            backgroundColor: "white",
+            padding: 20,
+            flex: 1
+          }}
+        >
           <Text style={{ color: "gray" }}>Defekta apraksts</Text>
 
           <TextInput
@@ -293,7 +301,7 @@ const ZoomContainer: React.FC<{
               <IonIcon name="trash" size={24} color="red" />
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       ) : null}
     </View>
   );
