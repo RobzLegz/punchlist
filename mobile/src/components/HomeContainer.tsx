@@ -59,7 +59,7 @@ const HomeContainer = () => {
             }}
           >
             <Text style={{ color: "gray", fontSize: 16 }}>
-              Pagaidåm nav neviena projekta
+              Pagaidām nav neviena projekta
             </Text>
           </View>
         )}
@@ -83,7 +83,7 @@ const HomeContainer = () => {
           }}
           onPress={() => navigation.navigate("Create")}
         >
-          <Text style={{ color: "#fff", fontSize: 16 }}>Jauns Projekts</Text>
+          <Text style={{ color: "#fff", fontSize: 16 }}>Jauns projekts</Text>
         </TouchableOpacity>
       </View>
     </View>
