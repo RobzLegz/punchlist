@@ -130,18 +130,18 @@ export const TopControls: React.FC<{
       {del ? (
         <>
           <TouchableOpacity onPress={close}>
-            <IonIcon name="arrow-back" size={35} color="#fff" />
+            <IonIcon name="arrow-back" size={30} color="#fff" />
           </TouchableOpacity>
 
-          <View style={{ flex: 1 }} />
+          <View style={{ flex: 1, height: 50 }} />
 
           <TouchableOpacity onPress={del}>
-            <IonIcon name="trash" size={35} color="#fff" />
+            <IonIcon name="trash" size={30} color="#fff" />
           </TouchableOpacity>
         </>
       ) : (
         <TouchableOpacity onPress={close}>
-          <MaterialIcons name="close" size={35} color="#fff" />
+          <MaterialIcons name="close" size={30} color="#fff" />
         </TouchableOpacity>
       )}
     </View>
