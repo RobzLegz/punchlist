@@ -447,7 +447,7 @@ export const Pin: React.FC<{
         ...styles.pin,
         top: y,
         left: x,
-        transform: [{ scale: Math.max(0.2, 1 / scale) }],
+        transform: [{ scale: scale > 1 ? Math.max(0.2, 1 / scale) : 1 }],
         opacity,
       }}
       onPress={onPress}

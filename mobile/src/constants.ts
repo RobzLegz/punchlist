@@ -1,1 +1,1 @@
-export const PIN_SIZE = 40;
+export const PIN_SIZE = 42;
