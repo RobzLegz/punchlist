@@ -1,14 +1,32 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
-import { AppInfo, selectApp } from "../redux/slices/appSlice";
-import { useSelector } from "react-redux";
+import { AppInfo, addNewProject, selectApp } from "../redux/slices/appSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Project } from "../types/project";
 
 const HomeContainer = () => {
   const navigation = useNavigation<any>();
+  const dispatch = useDispatch();
 
   const appInfo: AppInfo = useSelector(selectApp);
+
+  const createNewProject = () => {
+    const id = appInfo.projects?.length
+      ? appInfo.projects[appInfo.projects.length - 1].id + 1
+      : 1;
+
+    const p: Project = {
+      id,
+      title: "",
+      blueprints: [],
+    };
+
+    dispatch(addNewProject(p));
+
+    navigation.navigate("Create", { ...p });
+  };
 
   return (
     <View style={{ width: "100%", height: "100%" }}>
@@ -81,7 +99,7 @@ const HomeContainer = () => {
             backgroundColor: "#000",
             borderRadius: 10,
           }}
-          onPress={() => navigation.navigate("Create")}
+          onPress={createNewProject}
         >
           <Text style={{ color: "#fff", fontSize: 16 }}>Jauns projekts</Text>
         </TouchableOpacity>

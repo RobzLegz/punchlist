@@ -26,19 +26,10 @@ export const appSlice: any = createSlice({
 
       return action.payload;
     },
-    addNewProject: (state, action: RdxAction<RdxProject>) => {
-      if (state.projects && state.projects.length > 0) {
-        const id = state.projects.sort((a, b) => b.id - a.id)[0].id + 1;
-
-        return {
-          ...state,
-          projects: [...state.projects, { ...action.payload, id }],
-        };
-      }
-
+    addNewProject: (state, action: RdxAction<Project>) => {
       return {
         ...state,
-        projects: [{ ...action.payload, id: 1 }],
+        projects: [action.payload],
       };
     },
     updateProject: (state, action: RdxAction<Project>) => {
@@ -66,7 +57,8 @@ export const appSlice: any = createSlice({
   },
 });
 
-export const { addNewProject, loadState, deleteProject, updateProject } = appSlice.actions;
+export const { addNewProject, loadState, deleteProject, updateProject } =
+  appSlice.actions;
 
 export const selectApp = (state: any) => state.app;
 

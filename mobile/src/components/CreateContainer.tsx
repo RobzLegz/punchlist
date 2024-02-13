@@ -89,13 +89,6 @@ const CreateContainer = () => {
           blueprints: blueprints,
         })
       );
-    } else {
-      dispatch(
-        addNewProject({
-          title: title,
-          blueprints: blueprints,
-        })
-      );
     }
 
     if (!nn) {
