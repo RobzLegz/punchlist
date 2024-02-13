@@ -76,20 +76,14 @@ const CreateContainer = () => {
     setSheetOpen(false);
   };
 
-  const handleProjectSave = (nn?: boolean) => {
-    if (!blueprints.length) {
-      return;
-    }
-
-    if (route.params?.id) {
-      dispatch(
-        updateProject({
-          id: route.params.id,
-          title: title,
-          blueprints: blueprints,
-        })
-      );
-    }
+  const handleProjectSave = ({ nn, bps }: { nn?: boolean; bps?: Plan[] }) => {
+    dispatch(
+      updateProject({
+        id: route.params.id,
+        title: title,
+        blueprints: bps ? bps : blueprints,
+      })
+    );
 
     if (!nn) {
       navigation.goBack();
@@ -103,6 +97,7 @@ const CreateContainer = () => {
       <ZoomContainer
         newBluePrint={newBluePrint}
         setNewBluePrint={setNewBluePrint}
+        saveProject={handleProjectSave}
         close={() => {
           setPpOpen(false);
           setSheetOpen(false);
@@ -139,7 +134,7 @@ const CreateContainer = () => {
           paddingHorizontal: 10,
         }}
       >
-        <TouchableOpacity onPress={() => handleProjectSave()}>
+        <TouchableOpacity onPress={() => handleProjectSave({})}>
           <IonIcon name="arrow-back" size={28} color="gray" />
         </TouchableOpacity>
 

@@ -26,7 +26,14 @@ const ZoomContainer: React.FC<{
   newBluePrint: Plan;
   setNewBluePrint: React.Dispatch<React.SetStateAction<Plan>>;
   close?: () => void;
-}> = ({ newBluePrint, setNewBluePrint, close }) => {
+  saveProject: ({
+    nn,
+    bps,
+  }: {
+    nn?: boolean | undefined;
+    bps?: Plan[] | undefined;
+  }) => void;
+}> = ({ newBluePrint, setNewBluePrint, close, saveProject }) => {
   const [newPin, setNewPin] = useState<Point | null>(null);
   const [addImage, setAddImage] = useState<boolean>(false);
   const [scale, setScale] = useState<number>(1);
