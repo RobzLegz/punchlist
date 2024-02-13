@@ -119,7 +119,6 @@ const CreateContainer = () => {
             image: "",
             points: [],
           });
-          // handleProjectSave(true);
         }}
       />
     );
