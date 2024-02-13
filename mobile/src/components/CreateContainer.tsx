@@ -436,9 +436,10 @@ export const Pin: React.FC<{
   disabled?: boolean;
   x: number;
   y: number;
+  scale?: number;
   opacity?: 0.4 | 1;
   onPress?: () => void;
-}> = ({ disabled = false, x, y, opacity = 1, onPress }) => {
+}> = ({ disabled = false, x, y, opacity = 1, onPress, scale = 1 }) => {
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -446,6 +447,7 @@ export const Pin: React.FC<{
         ...styles.pin,
         top: y,
         left: x,
+        transform: [{ scale: Math.max(0.2, 1 / scale) }],
         opacity,
       }}
       onPress={onPress}

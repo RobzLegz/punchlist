@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import ImageZoom from "react-native-image-pan-zoom";
 import { Plan, Point } from "../types/project";
-import { PIN_SIZE } from "../constants";
 import { Pin } from "./CreateContainer";
 import Entypo from "react-native-vector-icons/Entypo";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import CameraScreenContainer from "./CameraScreenContainer";
 import { Camera } from "expo-camera";
+import { PIN_SIZE } from "../constants";
 
 const { width, height } = Dimensions.get("window");
 
@@ -29,14 +29,15 @@ const ZoomContainer: React.FC<{
 }> = ({ newBluePrint, setNewBluePrint, close }) => {
   const [newPin, setNewPin] = useState<Point | null>(null);
   const [addImage, setAddImage] = useState<boolean>(false);
+  const [scale, setScale] = useState<number>(1);
 
   const handleClick = (e: any) => {
     if (newPin) {
       setNewPin({
         geo: newPin.geo,
         coords: {
-          x: e.locationX - PIN_SIZE / 2,
-          y: e.locationY - PIN_SIZE / 2,
+          x: e.locationX,
+          y: e.locationY,
         },
         description: newPin.description,
         irl_image: newPin.irl_image,
@@ -129,7 +130,14 @@ const ZoomContainer: React.FC<{
           imageHeight={360}
           imageWidth={width}
           minScale={0.5}
+          maxScale={1000}
           onLongPress={handleClick}
+          pinchToZoom
+          onMove={(e: any) => {
+            if (e.scale !== scale) {
+              setScale(e.scale);
+            }
+          }}
         >
           <View
             style={{
@@ -152,6 +160,7 @@ const ZoomContainer: React.FC<{
                 opacity={1}
                 x={newPin.coords.x}
                 y={newPin.coords.y}
+                scale={scale}
               />
             ) : null}
 
@@ -161,6 +170,7 @@ const ZoomContainer: React.FC<{
                 opacity={newPin ? 0.4 : 1}
                 x={p.coords.x}
                 y={p.coords.y}
+                scale={scale}
                 onPress={() => {
                   let newBp = newBluePrint;
 
