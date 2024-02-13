@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   ScrollView,
+  Pressable,
 } from "react-native";
 import ImageZoom from "react-native-image-pan-zoom";
 import { Plan, Point } from "../types/project";
@@ -184,12 +185,29 @@ const ZoomContainer: React.FC<{
       </View>
 
       {newPin ? (
+        <Pressable
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+          }}
+          onPress={handleSavePin}
+        />
+      ) : null}
+
+      {newPin ? (
         <ScrollView
           style={{
             width: "100%",
             backgroundColor: "white",
             padding: 20,
-            flex: 1
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            height: "auto",
           }}
         >
           <Text style={{ color: "gray" }}>Defekta apraksts</Text>

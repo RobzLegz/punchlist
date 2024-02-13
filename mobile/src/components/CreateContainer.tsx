@@ -76,7 +76,7 @@ const CreateContainer = () => {
     setSheetOpen(false);
   };
 
-  const handleProjectSave = () => {
+  const handleProjectSave = (nn?: boolean) => {
     if (!blueprints.length) {
       return;
     }
@@ -98,7 +98,9 @@ const CreateContainer = () => {
       );
     }
 
-    navigation.goBack();
+    if (!nn) {
+      navigation.goBack();
+    }
   };
 
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -117,6 +119,7 @@ const CreateContainer = () => {
             image: "",
             points: [],
           });
+          // handleProjectSave(true);
         }}
       />
     );
@@ -144,7 +147,7 @@ const CreateContainer = () => {
           paddingHorizontal: 10,
         }}
       >
-        <TouchableOpacity onPress={handleProjectSave}>
+        <TouchableOpacity onPress={() => handleProjectSave()}>
           <IonIcon name="arrow-back" size={28} color="gray" />
         </TouchableOpacity>
 

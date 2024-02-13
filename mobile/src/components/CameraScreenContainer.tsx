@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Text,
 } from "react-native";
 import { Camera } from "expo-camera";
 import { MaterialIcons, Octicons, Entypo } from "@expo/vector-icons";
